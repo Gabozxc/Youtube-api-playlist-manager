@@ -1,30 +1,33 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 import { Layout, PreviewVideo } from "../../components/root";
 
 export default function Playlist() {
+
+  const router = useRouter();
+  const { id } = router.query;
 
   const [loading, setLoading] = useState(true);
   const [subsList, setSubsList] = useState([]);
 
   useEffect(() => {
     const getYTData = async () => {
-      if (loading) {
+      if (loading && id !== undefined) {
         try {
           const { data } = await axios.post("/api/getPlaylistSongs", {
             withCredentials: true,
           });
           setLoading(false);
           setSubsList(data);
-          console.log(data)
         } catch (err) {
           console.log(err);
         }
       }
-    };
+    };  
     getYTData();
-  }, [loading]);
+  }, [loading, id]);
 
   return (
     <Layout>
