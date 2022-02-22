@@ -43,7 +43,12 @@ const requestYoutube = async (req, res) => {
 
   accessToken = token.accessToken;
 
-  const data = await getPlayListSong();
+  try {
+    const data = await getPlayListSong();
+    res.status(200).json(data);
+  }catch(err){
+    res.status(200).json(err);
+  }
 
   res.status(200).json(data);
 };
