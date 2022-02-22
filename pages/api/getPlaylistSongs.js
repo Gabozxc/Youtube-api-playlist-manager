@@ -32,8 +32,15 @@ const getPlayListSong = async () => {
 };
 
 const requestYoutube = async (req, res) => {
+  
   const session = await getSession({ req });
-  playlistId = req.body.id;
+  const urlConfig = req.headers.referer.substring(
+    req.headers.referer.lastIndexOf("/"),
+    req.headers.referer.length
+  );
+  const url = urlConfig.replace(/\//g, '');
+
+  playlistId = url;
 
   if (!session) {
     return res.status(401).end();
