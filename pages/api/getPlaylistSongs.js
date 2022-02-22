@@ -1,0 +1,51 @@
+import axios from "axios";
+import { getSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
+
+const secret = process.env.SECRET;
+let accessToken;
+let playlistId;
+
+const getPlayListSong = async () => {
+
+  const { data } = await axios.get(
+    `https://www.googleapis.com/youtube/v3/playlistItems`,
+    {
+      params: {
+        part: "snippet",
+        maxResults: "50",
+        playlistId,
+        key: process.env.YOUTUBE_API_KEY,
+      },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  if (data?.nextPageToken) {
+    return data.items.concat(await getPlayListSong(data.nextPageToken));
+  }
+
+  return data.items;
+
+};
+
+const requestYoutube = async (req, res) => {
+  const session = await getSession({ req });
+  playlistId = req.body.id;
+
+  if (!session) {
+    return res.status(401).end();
+  }
+
+  const token = await getToken({ req, secret, encryption: true });
+
+  accessToken = token.accessToken;
+
+  const data = await getPlayListSong();
+
+  res.status(200).json(data);
+};
+
+export default requestYoutube;
