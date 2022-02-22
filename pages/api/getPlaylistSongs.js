@@ -7,16 +7,9 @@ let accessToken;
 let playlistId;
 
 const getPlayListSong = async () => {
-
   const { data } = await axios.get(
-    `https://www.googleapis.com/youtube/v3/playlistItems`,
+    `https://www.googleapis.com/youtube/v3/playlistItems&part=snippet&maxResults=50&playlistId=${playlistId}&key=${process.env.YOUTUBE_API_KEY}`,
     {
-      params: {
-        part: "snippet",
-        maxResults: "50",
-        playlistId,
-        key: process.env.YOUTUBE_API_KEY,
-      },
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -28,17 +21,15 @@ const getPlayListSong = async () => {
   }
 
   return data.items;
-
 };
 
 const requestYoutube = async (req, res) => {
-
   const session = await getSession({ req });
   const urlConfig = req.headers.referer.substring(
     req.headers.referer.lastIndexOf("/"),
     req.headers.referer.length
   );
-  const url = urlConfig.replace(/\//g, '');
+  const url = urlConfig.replace(/\//g, "");
 
   playlistId = url;
 
@@ -53,11 +44,9 @@ const requestYoutube = async (req, res) => {
   try {
     const data = await getPlayListSong();
     res.status(200).json(data);
-  }catch(err){
+  } catch (err) {
     res.status(200).json(err);
   }
-  
-
 };
 
 export default requestYoutube;
