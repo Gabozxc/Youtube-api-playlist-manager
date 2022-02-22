@@ -9,7 +9,7 @@ export default function Playlist() {
   const router = useRouter();
   const { id } = router.query;
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [subsList, setSubsList] = useState([]);
 
   useEffect(() => {
@@ -28,6 +28,8 @@ export default function Playlist() {
     };  
     getYTData();
   }, [loading, id]);
+
+  console.log(subsList);
 
   return (
     <Layout>
