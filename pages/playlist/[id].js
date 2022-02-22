@@ -5,29 +5,31 @@ import { useRouter } from "next/router";
 import { Layout, PreviewVideo } from "../../components/root";
 
 export default function Playlist() {
+  
   const router = useRouter();
   const { id } = router.query;
 
   const [loading, setLoading] = useState(true);
   const [subsList, setSubsList] = useState([]);
 
-  const getYTData = async () => {
-    if (loading) {
-      try {
-        const { data } = await axios.post("/api/getPlaylistSongs", {
-          withCredentials: true,
-          id,
-        });
-        setLoading(false);
-        setSubsList(data);
-        console.log(data)
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
+
   useEffect(() => {
-    if(id){
+    if(loading){
+      const getYTData = async () => {
+        if (id) {
+          try {
+            const { data } = await axios.post("/api/getPlaylistSongs", {
+              withCredentials: true,
+              id,
+            });
+            setLoading(false);
+            setSubsList(data);
+            console.log(data)
+          } catch (err) {
+            console.log(err);
+          }
+        }
+      };
       getYTData();
     }
   }, [loading, id]);
