@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import { Layout, PreviewVideo } from "../../components/root";
+import { Layout, PreviewVideo, Search } from "../../components/root";
 
 export default function Playlist() {
 
@@ -29,14 +29,13 @@ export default function Playlist() {
     getYTData();
   }, [loading, id]);
 
-  console.log(subsList);
-
   return (
     <Layout>
-      <div className="pl-10 text-center">
-        <button className="bg-blue-500 border-solid hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer" onClick={() => setLoading(true)}>Refresh</button>
+      <Search />
+      <div className="pl-10">
+          <h2 className="font-bold text-xl text-left ml-7 mt-10">Your videos</h2>
         <section className="flex flex-row flex-wrap justify-start">
-          {subsList?.map((sub) => (
+          {subsList.length > 0 && subsList?.map((sub) => (
             <PreviewVideo
               key={sub.id}
               title={sub.snippet.title}
@@ -46,6 +45,7 @@ export default function Playlist() {
           {loading && <p>Loading...</p>}
         </section>
       </div>
+      <button className="bg-blue-500 border-solid ml-14 mb-5 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer" onClick={() => setLoading(true)}>Refresh</button>
     </Layout>
   );
 }
