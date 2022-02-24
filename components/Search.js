@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import PreviewVideo from "./PreviewVideo";
+
+import PreviewVideoFounded from "./PreviewVideoFounded";
 
 const Search = () => {
+
+
   const [search, setSearch] = useState("");
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState([]);
+
 
   useEffect(() => {
     const getYTData = async () => {
@@ -34,7 +38,6 @@ const Search = () => {
             className="bg-purple-white shadow rounded border-0 p-3"
             placeholder="Search by name..."
             value={search}
-            
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
@@ -49,16 +52,23 @@ const Search = () => {
         <p>Loading....</p>
       ) : (
         <>
-          <h2 className={`ml-7 font-bold text-xl ${results.length <= 0 && 'hidden'}`} >Search results</h2>
+          <h2
+            className={`ml-7 font-bold text-xl ${
+              results.length <= 0 && "hidden"
+            }`}
+          >
+            Search results
+          </h2>
           <div className="bg-gray-100">
             <div className="flex overflow-x-auto">
               <div className="flex items-center justify-start flex-nowrap">
                 {results.length > 0 &&
                   results?.map((sub) => (
-                    <PreviewVideo
-                      key={sub.id.videoId}
+                    <PreviewVideoFounded
+                      key={sub.id.videoId+sub.snippet.title}
                       title={sub.snippet.title}
                       url={sub.snippet?.thumbnails?.high?.url}
+                      video={sub}
                     />
                   ))}
               </div>
