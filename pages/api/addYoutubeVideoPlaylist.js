@@ -10,25 +10,31 @@ let idPlaylist;
 const addYoutubeVideoPlaylist = async () => {
   console.log(`El video es ${idVideo} y la playlist es ${idPlaylist}`);
 
-  const { data } = await axios.post(
-    `https://www.googleapis.com/youtube/v3/playlistItems`,
-    {
-      params: {
-        part: "snippet",
-        key: process.env.YOUTUBE_API_KEY,
-        snippet: {
-            playlistId: idPlaylist,
-            resourceId: {
-                kind: "youtube#video",
-                videoId: idVideo,
-            },
-        },
+  //PlaylistItems API request to add video to a playlist
+  const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&key=${process.env.YOUTUBE_API_KEY}`;
+
+  const datas = {
+    snippet: {
+      playlistId: idPlaylist,
+      resourceId: {
+        kind: "youtube#video",
+        videoId: idVideo,
       },
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
+    },
+  };
+
+  const options = {
+    method: "POST",
+    url: url,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: datas,
+  };
+
+  const data = await axios(options);
+
+  console.log(data);
 
   if (data?.nextPageToken) {
     return data.items.concat(await addYoutubeVideoPlaylist(data.nextPageToken));
