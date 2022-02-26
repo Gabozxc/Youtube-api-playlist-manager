@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { Layout, BoxVideoPlaylist, SearchXscroll } from "../../components/root";
+import { Layout, BoxVideosPlaylist, SearchXscroll } from "../../components/root";
 
 export async function getServerSideProps(context) {
   return {
@@ -58,7 +58,7 @@ export default function Playlist({ idUrl }) {
           <div className="titulo-search flex items-center justify-start flex-wrap">
             <h2 className="ml-7 font-bold text-xl">Your Videos:</h2>
           </div>
-          <BoxVideoPlaylist
+          <BoxVideosPlaylist
             subsList={subsList}
             loading={loading}
             idPlaylist={id}
