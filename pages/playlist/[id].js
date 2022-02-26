@@ -10,12 +10,12 @@ export async function getServerSideProps(context) {
   return {
     props: {
       idUrl: context.query.id,
-      load: true,
     },
   };
 }
 
-export default function Playlist({ idUrl, load }) {
+export default function Playlist({ idUrl }) {
+
   const router = useRouter();
   const { id } = router.query;
 
