@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { signIn, useSession, signOut } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import axios from "axios";
 
 import { Layout, PlayListHome } from "../components/root";
