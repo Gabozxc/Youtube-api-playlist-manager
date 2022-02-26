@@ -1,20 +1,35 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
-import { Layout, BoxVideoPlaylist, Search } from "../../components/root";
+import { Layout, BoxVideoPlaylist, SearchXscroll } from "../../components/root";
 
-export default function Playlist() {
+export async function getServerSideProps(context) {
+  return {
+    props: {
+      idUrl: context.query.id,
+      load: true,
+    },
+  };
+}
 
+export default function Playlist({ idUrl, load }) {
   const router = useRouter();
   const { id } = router.query;
 
   const [loading, setLoading] = useState(true);
   const [subsList, setSubsList] = useState([]);
+  const [oldUrl, setoldUrl] = useState(id);
 
   useEffect(() => {
+    if (id && idUrl) {
+      if (oldUrl !== idUrl) {
+        setLoading(true);
+      }
+    }
+
     const getYTData = async () => {
       if (loading && id !== undefined) {
         try {
@@ -29,29 +44,28 @@ export default function Playlist() {
       }
     };
     getYTData();
-  }, [loading, id]);
+  }, [loading, id, idUrl, oldUrl]);
 
-  if(id === undefined) {
-    return (<div>Error</div>)
+  if (id === undefined) {
+    return <div>Error</div>;
   }
 
   return (
     <Layout>
+      <SearchXscroll />
       <DndProvider backend={HTML5Backend}>
-        <Search />
-        <div className="pl-10">
-          <h2 className="font-bold text-xl text-left ml-7 mt-10">
-            Your videos
-          </h2>
-          <BoxVideoPlaylist subsList={subsList} loading={loading} idPlaylist={id} setLoading={setLoading}/>
+        <div className="">
+          <div className="titulo-search flex items-center justify-start flex-wrap">
+            <h2 className="ml-7 font-bold text-xl">Your Videos:</h2>
+          </div>
+          <BoxVideoPlaylist
+            subsList={subsList}
+            loading={loading}
+            idPlaylist={id}
+            setLoading={setLoading}
+          />
         </div>
       </DndProvider>
-      <button
-        className="bg-blue-500 border-solid ml-14 mb-5 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
-        onClick={() => setLoading(true)}
-      >
-        Refresh
-      </button>
     </Layout>
   );
 }

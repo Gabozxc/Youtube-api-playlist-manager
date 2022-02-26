@@ -4,7 +4,7 @@ import axios from "axios";
 import PreviewVideoFounded from "./PreviewVideoFounded";
 import Loading from "./Loading";
 
-const Search = () => {
+const SearchXscroll = () => {
   const [search, setSearch] = useState("");
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState([]);
@@ -28,8 +28,8 @@ const Search = () => {
   }, [searching, search]);
 
   return (
-    <section className="mt-5">
-      <div className="flex justify-center items-center">
+    <section className="mt-5 max-w-[90%] my-0 mx-auto">
+      <nav className="flex justify-center items-center field-input">
         <div className="relative mr-6 my-2">
           <input
             type="search"
@@ -41,17 +41,19 @@ const Search = () => {
         </div>
         <button
           className="bg-blue-500 border-solid hover:bg-blue-700 text-white font-bold px-4 min-h-[48px] rounded cursor-pointer"
-          onClick={() => setSearching(true)}
+          onClick={(e) => {
+            e.preventDefault(), setSearching(true);
+          }}
         >
           Search Video
         </button>
-      </div>
+      </nav>
       {searching ? (
         <div className="flex justify-center mr-[10vw] mt-5">
           <Loading />
         </div>
       ) : (
-        <div className="pl-10">
+        <>
           <div className="titulo-search flex items-center justify-start flex-wrap">
             <h2
               className={`ml-7 font-bold text-xl ${
@@ -61,23 +63,21 @@ const Search = () => {
               SEARCH RESULTS:
             </h2>
           </div>
-          <div className="flex">
-            <div className="flex items-baseline justify-center flex-wrap">
-              {results.length > 0 &&
-                results?.map((sub) => (
-                  <PreviewVideoFounded
-                    key={sub.id.videoId + sub.snippet.title}
-                    title={sub.snippet.title}
-                    url={sub.snippet?.thumbnails?.high?.url}
-                    video={sub}
-                  />
-                ))}
-            </div>
+          <div className="flex items-baseline justify-center flex-wrap overflow-y-scroll max-h-[350px]">
+            {results.length > 0 &&
+              results?.map((sub) => (
+                <PreviewVideoFounded
+                  key={sub.etag}
+                  title={sub.snippet.title}
+                  url={sub.snippet?.thumbnails?.high?.url}
+                  video={sub}
+                />
+              ))}
           </div>
-        </div>
+        </>
       )}
     </section>
   );
 };
 
-export default Search;
+export default SearchXscroll;

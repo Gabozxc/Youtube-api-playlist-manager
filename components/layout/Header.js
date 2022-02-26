@@ -1,24 +1,32 @@
-import { signOut, useSession } from "next-auth/react";
+import { signOut, signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 
 const Header = () => {
   const { data: session } = useSession();
 
   return (
-    <header className="bg-blue-500 p-5 mb-5">
+    <header className="bg-blue-500 p-5">
       <div className="flex justify-between items-center	">
-        <Link  href="/" ><a className="text-white text-lg font-bold">Playlist Manager</a></Link>
+        <Link href="/">
+          <a className="text-white text-lg font-bold">Playlist Manager</a>
+        </Link>
         <div className="">
-          {session && (
-            <>
-              <button
-                onClick={() => signOut("google")}
-                className="bg-red-500 hover:bg-transparent border-solid	 hover:bg-red-700  text-white font-bold 
+          {session ? (
+            <button
+              onClick={() => signOut("google")}
+              className="bg-red-500 hover:bg-transparent border-solid	 hover:bg-red-700  text-white font-bold 
                 py-2 px-4 rounded cursor-pointer"
-              >
-                Sign Out
-              </button>
-            </>
+            >
+              Sign Out
+            </button>
+          ) : (
+            <button
+              onClick={() => signIn("google")}
+              className="bg-blue-600 hover:bg-transparent border-solid	 hover:bg-blue-800  text-white font-bold 
+          py-2 px-4 rounded cursor-pointer"
+            >
+              Sign In
+            </button>
           )}
         </div>
       </div>

@@ -1,38 +1,31 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { signIn, useSession, signOut } from "next-auth/react";
+import axios from "axios";
 
 import { Layout, PlayListHome } from "../components/root";
 
 export default function Home() {
-
   const { data: session } = useSession();
 
-  //get expire time from session
-  const expireTime = session ? session.expires : null;
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data } = await axios.post("/api/checkSession", {
+        withCredentials: true,
+      });
 
-  //get times and signout
-  const time = expireTime ? new Date(expireTime) : null;
-  const timeNow = new Date();
-
-  //get time difference
-  const timeDiff = time ? timeNow.getTime() - time.getTime() : null;
-
-  //if time difference is greater than 0, signout and redirect to signin
-  if (timeDiff > 0) {
-    signOut({ returnTo: "/" });
-  }
+      if (!data.token) {
+        signOut();
+      }
+    };
+    checkSession();
+  }, []);
 
   return (
     <Layout>
       {!session && (
-        <>
-          <button
-            onClick={() => signIn("google")}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer flex justify-center 
-            my-0 mx-auto"
-          >
-            Sign In With Google
-          </button>
-        </>
+        <div className="flex justify-center  mt-10">
+          <h1 className="text-xl font-bold">Login with google to start using the application</h1>
+        </div>
       )}
       {session && <PlayListHome />}
     </Layout>

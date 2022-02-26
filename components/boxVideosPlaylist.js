@@ -3,6 +3,7 @@ import { useDrop } from "react-dnd";
 
 import { itemTypes } from "./itemTypes";
 import PreviewVideo from "./PreviewVideo";
+import Loading from "./Loading";
 
 const BoxVideosPlaylist = ({ subsList, loading, idPlaylist, setLoading }) => {
 
@@ -31,7 +32,7 @@ const BoxVideosPlaylist = ({ subsList, loading, idPlaylist, setLoading }) => {
       role={"boxVideos"}
       className={` ${
         isActive ? "border-blue-500 rounded-lg" : "border-transparent"
-      } border flex flex-row flex-wrap justify-start`}
+      } border flex items-baseline justify-center flex-wrap`}
     >
       {subsList.length > 0 &&
         subsList?.map((sub) => (
@@ -41,7 +42,7 @@ const BoxVideosPlaylist = ({ subsList, loading, idPlaylist, setLoading }) => {
             url={sub.snippet?.thumbnails?.high?.url}
           />
         ))}
-      {loading && <p>Loading...</p>}
+      {loading && <Loading />}
     </section>
   );
 };
