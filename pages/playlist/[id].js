@@ -1,53 +1,55 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { getSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
 
-import { Layout, BoxVideosPlaylist, SearchXscroll } from "../../components/root";
+import {
+  Layout,
+  BoxVideosPlaylist,
+  SearchXscroll,
+} from "../../components/root";
 
-export async function getServerSideProps(context) {
+export async function getServerSideProps({ req, query }) {
+  const secret = process.env.SECRET;
+
+  const session = await getSession({ req });
+  const token = await getToken({ req, secret, encryption: true });
+
+  const id = query.id;
+
+  if (token && session) {
+    const { data } = await axios.post(
+      `${process.env.NEXTAUTH_URL}/api/getPlaylistSongs`,
+      {
+        withCredentials: true,
+        id,
+        token,
+      }
+    );
+    return {
+      props: {
+        id,
+        session: session,
+        data,
+      },
+    };
+  }
+
   return {
     props: {
-      idUrl: context.query.id,
+      session: false,
     },
   };
 }
 
-export default function Playlist({ idUrl }) {
+export default function Playlist({ id, session, data }) {
 
-  const router = useRouter();
-  const { id } = router.query;
+  const [loading, setLoading] = useState(false);
 
-  const [loading, setLoading] = useState(true);
-  const [subsList, setSubsList] = useState([]);
-  const [oldUrl, setoldUrl] = useState(id);
-
-  useEffect(() => {
-    if (id && idUrl) {
-      if (oldUrl !== idUrl) {
-        setLoading(true);
-      }
-    }
-
-    const getYTData = async () => {
-      if (loading && id !== undefined) {
-        try {
-          const { data } = await axios.post("/api/getPlaylistSongs", {
-            withCredentials: true,
-          });
-          setLoading(false);
-          setSubsList(data);
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    };
-    getYTData();
-  }, [loading, id, idUrl, oldUrl]);
-
-  if (id === undefined) {
-    return <div>Error</div>;
+  if (session === false) {
+    return <h2>Without Session</h2>;
   }
 
   return (
@@ -59,7 +61,7 @@ export default function Playlist({ idUrl }) {
             <h2 className="ml-7 font-bold text-xl">Your Videos:</h2>
           </div>
           <BoxVideosPlaylist
-            subsList={subsList}
+            subsList={data}
             loading={loading}
             idPlaylist={id}
             setLoading={setLoading}
