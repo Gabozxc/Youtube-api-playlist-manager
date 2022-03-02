@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useDrop } from "react-dnd";
+import { useRouter } from "next/router";
 
 import ListPlayList from "../ListPlaylist";
 import Loading from "../Loading";
@@ -11,6 +12,7 @@ const SideBarList = () => {
 
   const [loading, setLoading] = useState(true);
   const [subsList, setSubsList] = useState([]);
+  const router = useRouter()
 
   const [{ canDrop }] = useDrop(() => ({
     accept: itemTypes.BOX,
@@ -32,6 +34,7 @@ const SideBarList = () => {
       }
     };
     getYTData();
+
   }, [loading]);
 
   return (
@@ -39,7 +42,7 @@ const SideBarList = () => {
       <ul>
         <li className="mb-5 text-white font-bold">PLAYLISTS:</li>
         {subsList.map((sub) => (
-          <ListPlayList sub={sub} key={sub.id} />
+          <ListPlayList sub={sub} key={sub.id} actualPage={router?.query.id === sub.id && true}/>
         ))}
         {loading ? <div className="ml-[10px]"><Loading /></div> : ""}
       </ul>

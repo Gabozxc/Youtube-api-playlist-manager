@@ -4,8 +4,8 @@ import { useDrop } from "react-dnd";
 
 import { itemTypes } from "./itemTypes";
 
-const ListPlaylist = ({ sub }) => {
-    
+const ListPlaylist = ({ sub, actualPage }) => {
+
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: itemTypes.BOX,
     drop: async (e) =>
@@ -26,7 +26,7 @@ const ListPlaylist = ({ sub }) => {
     <li className="mb-2">
       <Link href={`/playlist/${sub.id}`}>
         <a
-          className={`w-100 inline-block text-white ${isActive && "text-green-500"}`}
+          className={`w-100 inline-block text-white ${isActive && "text-green-500"} ${actualPage && "font-bold"}`}
           ref={drop}
           role={"boxVideos"}
           id={sub.id}

@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
+import { useRouter } from "next/router";
 
 import {
   Layout,
@@ -45,14 +46,17 @@ export async function getServerSideProps({ req, query }) {
   };
 }
 
-export default function Playlist({ id, session, data }) {
+export default function Playlist({ session, data, id }) {
 
-  const [loading, setLoading] = useState(false);
-  const [idplay, setId] = useState(id)
+  const router = useRouter();
+
+  const [loading, setLoading] = useState(false)
+  const [idPlaylist, setIdPlaylist] = useState(id)
 
   useEffect(() => {
-    setId(id)
-  }, [idplay, id])
+    if(!router.isReady) return;
+    setIdPlaylist(router.query.id)
+  }, [loading, router])
 
   if (session === false) {
     return <h2>Without Session</h2>;
@@ -62,24 +66,23 @@ export default function Playlist({ id, session, data }) {
     <Layout>
       <SearchXscroll />
       <DndProvider backend={HTML5Backend}>
-          <div className="titulo-search flex items-center justify-start flex-wrap">
-            <h2 className="ml-7 mb-5 font-bold text-xl">Your Videos:</h2>
-          </div>
+        <div className="titulo-search flex items-center justify-start flex-wrap">
+          <h2 className="ml-7 mb-5 font-bold text-xl">Your Videos:</h2>
+        </div>
 
-          {loading ? (
-            <div className="flex justify-center mr-[10vw] mt-5">
-              <Loading />
-            </div>
-          ) : (
-            <>
-              <BoxVideosPlaylist
-                subsList={data}
-                loading={loading}
-                idPlaylist={idplay}
-                setLoading={setLoading}
-              />
-            </>
-          )}
+        {loading ? (
+          <div className="flex justify-center mr-[10vw] mt-5">
+            <Loading />
+          </div>
+        ) : (
+          <>
+            <BoxVideosPlaylist
+              videos={data}
+              idPlaylist={idPlaylist}
+              setLoading={setLoading}
+            />
+          </>
+        )}
       </DndProvider>
     </Layout>
   );
