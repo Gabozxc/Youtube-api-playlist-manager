@@ -27,7 +27,6 @@ const SideBarList = () => {
         const { data } = await axios.get("/api/getYTData", {
           withCredentials: true,
         });
-        console.log(data)
         setLoading(false);
         setSubsList(data);
       }
