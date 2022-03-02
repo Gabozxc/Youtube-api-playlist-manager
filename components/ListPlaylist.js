@@ -23,12 +23,13 @@ const ListPlaylist = ({ sub }) => {
   const isActive = canDrop && isOver;
 
   return (
-    <li className="mb-2 text-white">
+    <li className="mb-2">
       <Link href={`/playlist/${sub.id}`}>
         <a
-          className={`w-100 inline-block ${isActive && "text-green-500"}`}
+          className={`w-100 inline-block text-white ${isActive && "text-green-500"}`}
           ref={drop}
           role={"boxVideos"}
+          id={sub.id}
         >
           {sub.snippet.title}
         </a>

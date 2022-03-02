@@ -8,8 +8,6 @@ let idVideo;
 let idPlaylist;
 
 const addYoutubeVideoPlaylist = async () => {
-  console.log(`El video es ${idVideo} y la playlist es ${idPlaylist}`);
-
   //PlaylistItems API request to add video to a playlist
   const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&key=${process.env.YOUTUBE_API_KEY}`;
 
@@ -34,8 +32,6 @@ const addYoutubeVideoPlaylist = async () => {
 
   const data = await axios(options);
 
-  console.log(data);
-
   if (data?.nextPageToken) {
     return data.items.concat(await addYoutubeVideoPlaylist(data.nextPageToken));
   }
@@ -57,8 +53,6 @@ const requestYoutube = async (req, res) => {
   const token = await getToken({ req, secret, encryption: true });
 
   accessToken = token.accessToken;
-  console.log(accessToken)
-
 
   const data = await addYoutubeVideoPlaylist();
 

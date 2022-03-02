@@ -6,6 +6,7 @@ const secret = process.env.SECRET;
 let accessToken;
 
 const requestYoutube = async (req, res) => {
+  
   const session = await getSession({ req });
 
   if (!session) {

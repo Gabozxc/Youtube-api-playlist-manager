@@ -10,7 +10,7 @@ const PreviewVideo = ({ title, url,  video}) => {
         end: (item, monitor) => {
             const dropResult = monitor.getDropResult();
             if (item && dropResult) {
-                console.log()
+                
             }
         },
         collect: (monitor) => ({

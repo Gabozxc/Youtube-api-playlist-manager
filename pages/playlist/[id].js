@@ -1,5 +1,5 @@
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { getSession } from "next-auth/react";
@@ -9,6 +9,7 @@ import {
   Layout,
   BoxVideosPlaylist,
   SearchXscroll,
+  Loading,
 } from "../../components/root";
 
 export async function getServerSideProps({ req, query }) {
@@ -47,6 +48,11 @@ export async function getServerSideProps({ req, query }) {
 export default function Playlist({ id, session, data }) {
 
   const [loading, setLoading] = useState(false);
+  const [idplay, setId] = useState(id)
+
+  useEffect(() => {
+    setId(id)
+  }, [idplay, id])
 
   if (session === false) {
     return <h2>Without Session</h2>;
@@ -56,17 +62,24 @@ export default function Playlist({ id, session, data }) {
     <Layout>
       <SearchXscroll />
       <DndProvider backend={HTML5Backend}>
-        <div className="">
           <div className="titulo-search flex items-center justify-start flex-wrap">
-            <h2 className="ml-7 font-bold text-xl">Your Videos:</h2>
+            <h2 className="ml-7 mb-5 font-bold text-xl">Your Videos:</h2>
           </div>
-          <BoxVideosPlaylist
-            subsList={data}
-            loading={loading}
-            idPlaylist={id}
-            setLoading={setLoading}
-          />
-        </div>
+
+          {loading ? (
+            <div className="flex justify-center mr-[10vw] mt-5">
+              <Loading />
+            </div>
+          ) : (
+            <>
+              <BoxVideosPlaylist
+                subsList={data}
+                loading={loading}
+                idPlaylist={idplay}
+                setLoading={setLoading}
+              />
+            </>
+          )}
       </DndProvider>
     </Layout>
   );

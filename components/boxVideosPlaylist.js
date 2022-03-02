@@ -10,13 +10,13 @@ const BoxVideosPlaylist = ({ subsList, loading, idPlaylist, setLoading }) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: itemTypes.BOX,
     drop: async (e) => (
-      console.log(idPlaylist),
+      setLoading(true),
       await axios.post("/api/addYoutubeVideoPlaylist", {
         withCredentials: true,
         idPlaylist,
         idVideo: e.idVideo,
       }),
-      setLoading(true)
+      setLoading(false)
     ),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -24,15 +24,13 @@ const BoxVideosPlaylist = ({ subsList, loading, idPlaylist, setLoading }) => {
     }),
   }));
 
-  const isActive = canDrop && isOver;
-
   return (
     <section
       ref={drop}
       role={"boxVideos"}
       className={` ${
-        isActive ? "border-blue-500 rounded-lg" : "border-transparent"
-      } border flex items-baseline justify-center flex-wrap`}
+        canDrop ? "border-blue-500  " : "rounded-lg  "
+      } border flex items-baseline justify-center flex-wrap rounded-lg w-[95%] my-0 mx-auto mb-5`}
     >
       {subsList.length > 0 &&
         subsList?.map((sub) => (
@@ -42,7 +40,6 @@ const BoxVideosPlaylist = ({ subsList, loading, idPlaylist, setLoading }) => {
             url={sub.snippet?.thumbnails?.high?.url}
           />
         ))}
-      {loading && <Loading />}
     </section>
   );
 };

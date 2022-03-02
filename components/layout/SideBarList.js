@@ -8,6 +8,7 @@ import { itemTypes } from "../itemTypes";
 
 
 const SideBarList = () => {
+
   const [loading, setLoading] = useState(true);
   const [subsList, setSubsList] = useState([]);
 
@@ -26,6 +27,7 @@ const SideBarList = () => {
         const { data } = await axios.get("/api/getYTData", {
           withCredentials: true,
         });
+        console.log(data)
         setLoading(false);
         setSubsList(data);
       }
@@ -36,7 +38,7 @@ const SideBarList = () => {
   return (
     <aside className={`p-5 pb-5 min-w-[188px] ${!canDrop ? "bg-blue-500" : "bg-blue-600"}`}>
       <ul>
-        <li className="mb-5 font-bold text-white">PLAYLISTS:</li>
+        <li className="mb-5 text-white font-bold">PLAYLISTS:</li>
         {subsList.map((sub) => (
           <ListPlayList sub={sub} key={sub.id} />
         ))}
