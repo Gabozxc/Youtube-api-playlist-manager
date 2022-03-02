@@ -26,7 +26,7 @@ const requestYoutube = async (req, res) => {
       //get code from the error
       const code = err.response.status;
       //if code is 401, the user is not authenticated
-      if (code >= 401 || err.response.data.error === "invalid_token") {
+      if (code >= 400 || err.response.data.error === "invalid_token") {
         return res.status(400).json({ token: false });
       }
     }
