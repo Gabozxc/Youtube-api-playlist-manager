@@ -22,12 +22,14 @@ const requestYoutube = async (req, res) => {
       await axios.get(
         `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
       );
+      console.log("es true")
     } catch (err) {
       //get code from the error
       const code = err.response.status;
+      console.log(code)
       //if code is 401, the user is not authenticated
-      if (code === 401 || err.response.data.error === "invalid_token") {
-        return res.status(200).json({ token: false });
+      if (code >= 401 || err.response.data.error === "invalid_token") {
+        return res.status(400).json({ token: false });
       }
     }
   }

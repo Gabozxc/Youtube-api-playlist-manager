@@ -1,9 +1,25 @@
+import { useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+
 import { Layout, PlayListHome } from "../components/root";
 
-export default function Home() {
+export  default function Home() {
   
   const { data: session } = useSession();
+  
+  useEffect(() => {
+    const sessionStatus = async () => {
+      try {
+        const sessionStatus = await fetch("/api/checkSession")
+      }
+      catch(err){
+        signOut();
+      }
+    }
+    sessionStatus();
+  }, [session])
+
 
   return (
     <Layout>
