@@ -5,5 +5,5 @@ export {default as Search} from "./Search"
 export {default as SearchXscroll} from "./SearchXscroll"
 export {default as Loading} from "./Loading"
 
-export {default as BoxVideosPlaylist} from "./BoxVideosPlaylist"
+export {default as BoxVideosPlaylist} from "./boxVideosPlaylist"
 export {itemTypes as itemTypes } from "./itemTypes"
