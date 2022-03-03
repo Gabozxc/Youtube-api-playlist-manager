@@ -6,7 +6,7 @@ const PreviewVideo = ({ title, url,  video}) => {
 
     const [{ isDragging }, drag] = useDrag(() => ({
         type: itemTypes.BOX,
-        item: { idVideo: video.id.videoId },
+        item: { idVideo: video.id.videoId, video:video },
         end: (item, monitor) => {
             const dropResult = monitor.getDropResult();
             if (item && dropResult) {

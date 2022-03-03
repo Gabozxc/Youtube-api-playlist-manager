@@ -22,7 +22,7 @@ export default function Home() {
       });
 
       if (!data.token) {
-        signOut();
+        signOut("google");
       }
 
     };
