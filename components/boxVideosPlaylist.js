@@ -15,7 +15,7 @@ const BoxVideosPlaylist = ({ videos, setLoading, idPlaylist }) => {
         idPlaylist: idPlaylist,
         idVideo: e.idVideo,
       }),
-      setLoading(false)
+      setLoading("add")
     ),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
