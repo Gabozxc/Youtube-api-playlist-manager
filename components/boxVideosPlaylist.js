@@ -4,7 +4,9 @@ import { useDrop } from "react-dnd";
 import { itemTypes } from "./itemTypes";
 import PreviewVideo from "./PreviewVideo";
 
-const BoxVideosPlaylist = ({ videos, setLoading, idPlaylist }) => {
+const BoxVideosPlaylist = ({ videos, idPlaylist, setLoading, }) => {
+
+  
 
   const [{ canDrop }, drop] = useDrop(() => ({
     accept: itemTypes.BOX,
@@ -15,6 +17,7 @@ const BoxVideosPlaylist = ({ videos, setLoading, idPlaylist }) => {
         idPlaylist: idPlaylist,
         idVideo: e.idVideo,
       }),
+      videos.push(e.video),
       setLoading(false)
     ),
     collect: (monitor) => ({

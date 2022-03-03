@@ -46,7 +46,6 @@ export async function getServerSideProps({ req, query }) {
 }
 
 export default function Playlist({ session, data, id }) {
-  
   const [loading, setLoading] = useState(false);
 
   if (session === false) {
