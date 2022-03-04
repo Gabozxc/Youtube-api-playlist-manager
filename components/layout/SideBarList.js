@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 import ListPlayList from "../ListPlaylist";
 import Loading from "../Loading";
-import NewPlayListModal from "../newPlayListModal";
+import NewPlayListModal from "../NewPlayListModal";
 import { itemTypes } from "../types/itemTypes";
 
 const SideBarList = () => {
