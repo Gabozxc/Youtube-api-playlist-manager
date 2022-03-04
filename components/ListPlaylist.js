@@ -1,10 +1,14 @@
+import {useState} from "react"
 import axios from "axios";
 import Link from "next/link";
 import { useDrop } from "react-dnd";
 
-import { itemTypes } from "./itemTypes";
+import { itemTypes } from "./types/itemTypes";
+import UpdatePlaylistModal from "./UpdatePlaylistModal";
 
 const ListPlaylist = ({ sub, actualPage }) => {
+
+  const [edit, setEdit] = useState(false);
 
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: itemTypes.BOX,
@@ -23,7 +27,7 @@ const ListPlaylist = ({ sub, actualPage }) => {
   const isActive = canDrop && isOver;
 
   return (
-    <li className="mb-2">
+    <li className="mb-2 flex justify-between">
       <Link href={`/playlist/${sub.id}`}>
         <a
           className={`w-100 inline-block text-white ${isActive && "text-green-500"} ${actualPage && "font-bold"}`}
@@ -34,6 +38,10 @@ const ListPlaylist = ({ sub, actualPage }) => {
           {sub.snippet.title}
         </a>
       </Link>
+      <div>
+        <span className="cursor-pointer" onClick={() => setEdit(true)}>✏️</span>
+      </div>
+      {edit && <UpdatePlaylistModal sub={sub} setEdit={setEdit} modal={edit} setModal={setEdit}/>}
     </li>
   );
 };

@@ -1,20 +1,10 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
 import { useDrop } from "react-dnd";
 
-import { itemTypes } from "./itemTypes";
+import { itemTypes } from "./types/itemTypes";
 import PreviewVideo from "./PreviewVideo";
 
 const BoxVideosPlaylist = ({ videos, idPlaylist, setLoading }) => {
-
-  const [videosPage, setVideos] = useState([])
-
-  useEffect(() => {
-    if(videosPage === []){
-      setVideos(videos)
-    }
-  }, [videosPage,videos, idPlaylist])
-
   const [{ canDrop }, drop] = useDrop(
     () => ({
       accept: itemTypes.BOX,
@@ -44,15 +34,14 @@ const BoxVideosPlaylist = ({ videos, idPlaylist, setLoading }) => {
         canDrop ? "border-blue-500  " : "rounded-lg  "
       } border flex items-end justify-center flex-wrap rounded-lg w-[95%] my-0 mx-auto mb-5 min-h-[250px]`}
     >
-      {videosPage.length > 0 &&
-        videosPage?.map((sub, index) => (
+      {videos.length > 0 &&
+        videos?.map((sub) => (
           <PreviewVideo
             key={sub.id}
             title={sub.snippet.title}
             url={sub.snippet?.thumbnails?.high?.url}
             id={sub.id}
-            videos={videosPage}
-            setVideos={setVideos}
+            videos={videos}
             setLoading={setLoading}
           />
         ))}

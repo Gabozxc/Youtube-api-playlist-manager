@@ -6,4 +6,4 @@ export {default as SearchXscroll} from "./SearchXscroll"
 export {default as Loading} from "./Loading"
 
 export {default as BoxVideosPlaylist} from "./boxVideosPlaylist"
-export {itemTypes as itemTypes } from "./itemTypes"
+export {itemTypes as itemTypes } from "./types/itemTypes"

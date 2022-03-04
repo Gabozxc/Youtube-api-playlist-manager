@@ -1,5 +1,5 @@
 import { useDrag } from 'react-dnd';
-import { itemTypes } from './itemTypes';
+import { itemTypes } from './types/itemTypes';
 import Image from "next/image";
 
 const PreviewVideo = ({ title, url,  video}) => {

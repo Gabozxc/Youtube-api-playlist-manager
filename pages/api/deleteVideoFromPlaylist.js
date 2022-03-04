@@ -22,9 +22,7 @@ const deleteVideoFromPlaylist = async () => {
             },
         }
     ).catch(err => console.log(err))
-
-
-
+    
   return "delete";
 };
 
@@ -39,8 +37,6 @@ const requestYoutube = async (req, res) => {
   }
 
   const token = await getToken({ req, secret, encryption: true });
-
-console.log(token)
 
   accessToken = token.accessToken;
 
