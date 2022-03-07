@@ -1,33 +1,13 @@
-import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
-import axios from "axios"
-import dynamic from 'next/dynamic'
+import dynamic from "next/dynamic";
 
-
+import useCheckSession from "../hooks/useCheckSession";
 import { Layout } from "../components/root";
 
-const PlayListHome = dynamic(() => import('../components/PlayListHome'))
-
+const PlayListHome = dynamic(() => import("../components/PlayListHome"));
 
 export default function Home() {
 
-  const { data: session } = useSession();
-
-  useEffect(() => {
-    const checkSession = async () => {
-
-      const { data } = await axios.post("/api/checkSession", {
-        withCredentials: true,
-      });
-
-      if (!data.token) {
-        signOut();
-      }
-
-    };
-    checkSession();
-  }, []);
+  const session = useCheckSession();
 
   return (
     <Layout>

@@ -13,7 +13,7 @@ const Search = () => {
     const getYTData = async () => {
       if (searching) {
         try {
-          const { data } = await axios.post("/api/getVideosYT", {
+          const { data } = await axios.post("/api/YoutubeApi/getVideosYT", {
             withCredentials: true,
             qSearch: search,
           });
@@ -37,6 +37,7 @@ const Search = () => {
             placeholder="Search by name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
+            onKeyDown={(e) => e.code === "Enter" && setSearching(true)}
           />
         </div>
         <button

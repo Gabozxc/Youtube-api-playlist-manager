@@ -13,7 +13,7 @@ const getVideosYT = async () => {
     {
       params: {
         part: "snippet",
-        maxResults: "10",
+        maxResults: "50",
         q,
         key: process.env.YOUTUBE_API_KEY,
       },

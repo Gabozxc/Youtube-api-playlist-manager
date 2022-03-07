@@ -4,7 +4,7 @@ import axios from "axios";
 const PreviewVideo = ({ title, url, id, setLoading, videos }) => {
   const deleteVideoFromPlaylist = async (id) => {
     setLoading(true);
-    await axios.post("/api/deleteVideoFromPlaylist", {
+    await axios.post("/api/YoutubeApi/deleteVideoFromPlaylist", {
       withCredentials: true,
       idVideo: id,
     });

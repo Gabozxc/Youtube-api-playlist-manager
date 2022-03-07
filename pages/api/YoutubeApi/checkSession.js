@@ -22,7 +22,7 @@ const requestYoutube = async (req, res) => {
         `https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${accessToken}`
       );
     } catch (err) {
-      const code = err.response.status;
+      const code = err?.response?.status;
 
       if (code >= 400 || err.response.data.error === "invalid_token") {
         return res.status(200).json({ token: false });

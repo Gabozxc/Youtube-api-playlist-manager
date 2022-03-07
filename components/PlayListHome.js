@@ -1,8 +1,8 @@
 
-import Search from "./Search";
+import SearchXscroll from "./SearchXscroll";
 
 export default function PlayListHome() {
   return (
-          <Search />
+          <SearchXscroll />
   );
 }

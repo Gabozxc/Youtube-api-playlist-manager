@@ -10,7 +10,7 @@ const BoxVideosPlaylist = ({ videos, idPlaylist, setLoading }) => {
       accept: itemTypes.BOX,
       drop: async (e) => (
         setLoading(true),
-        await axios.post("/api/addYoutubeVideoPlaylist", {
+        await axios.post("/api/YoutubeApi/addYoutubeVideoPlaylist", {
           withCredentials: true,
           idPlaylist: idPlaylist,
           idVideo: e.idVideo,

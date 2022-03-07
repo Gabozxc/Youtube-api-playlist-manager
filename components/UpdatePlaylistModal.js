@@ -1,33 +1,27 @@
 import { useState } from "react";
 import axios from "axios";
-import {useRouter} from 'next/router'
+import { useDispatch } from "react-redux";
+
+import { EditPlaylist, DeletePlaylist } from "../actions/ActionsYT";
 
 const NewPlayListModal = ({ modal, setModal, sub }) => {
 
-    const router = useRouter();
+  const dispatch = useDispatch();
 
   const [playlist, setPlaylist] = useState({
     title: sub.snippet.title,
     description: sub.snippet.description,
+    id: sub.id,
   });
 
   const updatePlaylist = async () => {
-    await axios.post("/api/updatePlaylistYT", {
-      withCredentials: true,
-      idPlaylist: sub.id,
-      title: playlist.title,
-      description: playlist.description,
-    });
+    dispatch(EditPlaylist(playlist));
     sub.snippet.title = playlist.title;
     setModal(false);
   };
 
   const deletePlaylist = async () => {
-    await axios.post("/api/deletePlaylistYT", {
-      withCredentials: true,
-      idPlaylist: sub.id,
-    });
-    router.reload();
+    dispatch(DeletePlaylist(sub.id));
     setModal(false);
   };
 

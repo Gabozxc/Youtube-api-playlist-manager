@@ -13,7 +13,7 @@ const ListPlaylist = ({ sub, actualPage }) => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: itemTypes.BOX,
     drop: async (e) =>
-      await axios.post("/api/addYoutubeVideoPlaylist", {
+      await axios.post("/api/YoutubeApi/addYoutubeVideoPlaylist", {
         withCredentials: true,
         idPlaylist: sub.id,
         idVideo: e.idVideo,

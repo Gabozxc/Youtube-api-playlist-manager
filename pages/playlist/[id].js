@@ -5,6 +5,8 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
 
+import useCheckSession from "../../hooks/useCheckSession";
+
 import {
   Layout,
   BoxVideosPlaylist,
@@ -22,7 +24,7 @@ export async function getServerSideProps({ req, query }) {
 
   if (token && session) {
     const { data } = await axios.post(
-      `${process.env.NEXTAUTH_URL}/api/getPlaylistSongs`,
+      `${process.env.NEXTAUTH_URL}/api/YoutubeApi/getPlaylistSongs`,
       {
         withCredentials: true,
         id,
@@ -45,10 +47,12 @@ export async function getServerSideProps({ req, query }) {
   };
 }
 
-export default function Playlist({ session, data, id }) {
+export default function Playlist({ data, id }) {
   const [loading, setLoading] = useState(false);
 
-  if (session === false) {
+  const session = useCheckSession();
+
+  if (!session) {
     return <h2>Without Session</h2>;
   }
 

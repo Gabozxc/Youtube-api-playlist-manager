@@ -1,13 +1,11 @@
 import { useState } from "react";
-import axios from "axios";
+import { useDispatch } from "react-redux";
 
-const NewPlayListModal = ({
-  modal,
-  setModal,
-  setLoading,
-  subsList,
-  setSubsList,
-}) => {
+import {NewPlayList} from "../actions/ActionsYT";
+
+const NewPlayListModal = ({ modal, setModal }) => {
+
+  const dispatch = useDispatch();
   const [playlist, setPlaylist] = useState({
     title: "",
     description: "",
@@ -15,18 +13,7 @@ const NewPlayListModal = ({
   });
 
   const createPlaylist = async () => {
-    setLoading(true);
-    const { data } = await axios.get("/api/createPlayListYT", {
-      withCredentials: true,
-      params: {
-        title: playlist.title,
-        description: playlist.description,
-        privacyStatus: playlist.privacyStatus,
-      },
-    });
-    //add new playlist to the list
-    setSubsList([data, ...subsList]);
-    setLoading(false);
+    dispatch(NewPlayList(playlist));
   };
 
   return (

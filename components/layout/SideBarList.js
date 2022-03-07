@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { useDrop } from "react-dnd";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 import ListPlayList from "../ListPlaylist";
 import Loading from "../Loading";
@@ -9,10 +9,10 @@ import NewPlayListModal from "../NewPlayListModal";
 import { itemTypes } from "../types/itemTypes";
 
 const SideBarList = () => {
-
+  
   const router = useRouter();
+  const { playLists, loading } = useSelector((state) => state.youtubeApi);
 
-  const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(false);
   const [subsList, setSubsList] = useState([]);
 
@@ -23,19 +23,6 @@ const SideBarList = () => {
       canDrop: monitor.canDrop(),
     }),
   }));
-
-  useEffect(() => {
-    const getYTData = async () => {
-      if (loading) {
-        const { data } = await axios.get("/api/getYTData", {
-          withCredentials: true,
-        });
-        setLoading(false);
-        setSubsList(data);
-      }
-    };
-    getYTData();
-  }, [loading, subsList]);
 
   return (
     <aside
@@ -49,30 +36,23 @@ const SideBarList = () => {
       >
         Create a playlist
       </button>
-      <ul>
+      <ul className="h-[435px] max-h-[435px] overflow-hidden  overflow-y-auto">
         <li className="mb-5 text-white font-bold">PLAYLISTS:</li>
         {loading ? (
           <div className="ml-[10px]">
             <Loading />
           </div>
         ) : (
-          subsList.map((sub) => (
+          playLists.map((sub) => (
             <ListPlayList
               sub={sub}
               key={sub.id}
               actualPage={router?.query.id === sub.id && true}
-              setLoading={setLoading}
             />
           ))
         )}
       </ul>
-      <NewPlayListModal
-        modal={modal}
-        setModal={setModal}
-        setLoading={setLoading}
-        subsList={subsList}
-        setSubsList={setSubsList}
-      />
+      <NewPlayListModal modal={modal} setModal={setModal} />
     </aside>
   );
 };
