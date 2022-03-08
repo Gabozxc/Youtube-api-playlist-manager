@@ -1,10 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
-
-import { DndProvider } from "react-dnd";
-import { TouchBackend } from "react-dnd-touch-backend";
 
 import useCheckSession from "../../hooks/useCheckSession";
 
@@ -57,27 +56,10 @@ export default function Playlist({ data, id }) {
     return <h2>Without Session</h2>;
   }
 
-  const hasNative =
-    document && (document.elementsFromPoint || document.msElementsFromPoint);
-
-  function getDropTargetElementsAtPoint(x, y, dropTargets) {
-    return dropTargets.filter((t) => {
-      const rect = t.getBoundingClientRect();
-      return (
-        x >= rect.left && x <= rect.right && y <= rect.bottom && y >= rect.top
-      );
-    });
-  }
-
-  const backendOptions = {
-    getDropTargetElementsAtPoint: !hasNative && getDropTargetElementsAtPoint,
-  };
-
   return (
     <Layout>
-      <DndProvider backend={TouchBackend} options={backendOptions}>
-        <SearchXscroll />
-
+      <SearchXscroll />
+      <DndProvider backend={HTML5Backend}>
         <div className="titulo-search flex items-center justify-start flex-wrap">
           <h2 className="ml-7 mb-5 font-bold text-xl">Your Videos:</h2>
         </div>
