@@ -2,16 +2,31 @@ import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import Script from "next/script";
 
 import Header from "./Header";
 import SideBarList from "./SideBarList";
 import Footer from "./Footer";
 
 const Layout = ({ children }) => {
+  
   const { data: session } = useSession();
 
   return (
     <>
+      <Script
+        async
+        src="https://www.googletagmanager.com/gtag/js?id=UA-28434234-61"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+         window.dataLayer = window.dataLayer || [];
+         function gtag(){dataLayer.push(arguments);}
+         gtag('js', new Date());
+         
+         gtag('config', 'UA-28434234-61');
+        `}
+      </Script>
       <Head>
         <title>Playlist Manager</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
