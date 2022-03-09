@@ -1,10 +1,13 @@
-import { signOut, signIn, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
+
 import vixLogo from "/public/images/logo-380x98.png";
 
 const Header = () => {
   const { data: session } = useSession();
+  const router = useRouter();
 
   return (
     <header className="bg-blue-500 p-5">
@@ -16,7 +19,7 @@ const Header = () => {
             </a>
           </Link>
           <div className="flex items-center ml-10 font-bold">
-            <p>Playlist management on steroids</p>
+            <p className="text-white">Playlist management on steroids</p>
           </div>
         </div>
         <div className="">
@@ -29,13 +32,14 @@ const Header = () => {
               Log out
             </button>
           ) : (
-            <button
-              onClick={() => signIn("google")}
-              className="bg-blue-600 hover:bg-transparent border-solid	 hover:bg-blue-800  text-white font-bold 
-          py-2 px-4 rounded cursor-pointer"
-            >
-              Sign In
-            </button>
+            <Link href="/login">
+            <a
+              className={`bg-blue-600 hover:bg-transparent border-solid	 hover:bg-blue-800  text-white font-bold 
+              py-2 px-4 rounded cursor-pointer ${router.asPath === "/login" && "hidden"}`}
+            > 
+              Login 
+            </a>
+            </Link>
           )}
         </div>
       </div>
