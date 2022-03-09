@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { DndProvider } from "react-dnd";
+import { TouchBackend } from "react-dnd-touch-backend";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import Script from "next/script";
 
@@ -9,8 +10,15 @@ import SideBarList from "./SideBarList";
 import Footer from "./Footer";
 
 const Layout = ({ children }) => {
-  
   const { data: session } = useSession();
+
+  let isTablet;
+
+  if (typeof window !== "undefined") {
+    isTablet = window?.innerWidth < 1000;
+  }
+
+  const backend = isTablet ? TouchBackend : HTML5Backend;
 
   return (
     <>
@@ -40,7 +48,7 @@ const Layout = ({ children }) => {
         <meta name="author" content="Gabriel Dos Santos with vixfid" />
       </Head>
       <Header />
-      <DndProvider backend={HTML5Backend}>
+      <DndProvider backend={backend}>
         <main className="flex row min-h-screen max-w-[95%]">
           {session && <SideBarList />}
           <div className="w-[100%]">{children}</div>
