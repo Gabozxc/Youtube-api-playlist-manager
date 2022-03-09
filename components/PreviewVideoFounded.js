@@ -20,7 +20,7 @@ const PreviewVideo = ({ title, url,  video}) => {
     }));
 
   return (
-    <div ref={drag} role="Box" data-testid={`box-${title}`} className={`${isDragging ? 'border-blue-500' : 'border-transparent'} border w-[250px] m-5 hover:bg-gray-200 flex flex-col rounded-lg`}>
+    <div ref={drag} role="Box" data-testid={`box-${title}`} className={`${isDragging ? 'border-blue-500' : 'border-transparent'} border w-[250px] m-5 hover:bg-gray-200 flex flex-col rounded-lg p-3 shadow-lg`}>
       {url ? (
         <Image
           alt={title}
