@@ -4,10 +4,14 @@ import axios from "axios";
 import PreviewVideoFounded from "./PreviewVideoFounded";
 import Loading from "./Loading";
 
-const SearchXscroll = () => {
+const SearchXscroll = ({ indexPage }) => {
   const [search, setSearch] = useState("");
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState([]);
+
+  const tooltipMessage = indexPage
+    ? "You can drag and drop the videos you want into the list you want, by their name in the sidebar or in the playlist box below"
+    : "You can drag and drop the videos you want into the list you want, by their name in the sidebar.";
 
   useEffect(() => {
     const getYTData = async () => {
@@ -30,6 +34,16 @@ const SearchXscroll = () => {
   return (
     <section className="mt-5 max-w-[90%] my-0 mx-auto">
       <nav className="flex justify-center items-center field-input">
+        {results.length > 0 && (
+          <div className="self bg-gray-600 rounded-full h-[20px] w-[20px] relative right-5 shadow-md hover:bg-gray-900">
+            <span
+              className="text-xl text-white absolute top-[-5px] left-[7px] right-0 bottom-0"
+              data-tip={tooltipMessage}
+            >
+              !
+            </span>
+          </div>
+        )}
         <div className="relative mr-6 my-2">
           <input
             type="search"

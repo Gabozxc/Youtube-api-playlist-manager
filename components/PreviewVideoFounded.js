@@ -1,6 +1,7 @@
 import { useDrag } from "react-dnd";
 import { itemTypes } from "./types/itemTypes";
 import Image from "next/image";
+import ReactTooltip from "react-tooltip";
 
 const PreviewVideo = ({ title, url, video }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
@@ -27,6 +28,7 @@ const PreviewVideo = ({ title, url, video }) => {
           ? "border-blue-500 cursor-grabbing"
           : "	border-transparent cursor-grab	"
       } border w-[250px] m-5 hover:bg-gray-200 flex flex-col rounded-lg p-3 shadow-lg`}
+      data-tip="You can grab the video and drop it into a playlist."
     >
       {url ? (
         <Image
@@ -40,6 +42,7 @@ const PreviewVideo = ({ title, url, video }) => {
         ""
       )}
       <h2 className="mb-4 mt-4 font-bold">{title}</h2>
+      <ReactTooltip />
     </div>
   );
 };

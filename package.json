@@ -4,21 +4,23 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node server.js",
     "lint": "next lint"
   },
   "dependencies": {
     "axios": "^0.26.0",
+    "mysql2": "^2.3.3",
     "next": "^12.1.0",
     "next-auth": "^4.2.1",
     "react": "17.0.2",
-    "react-beautiful-dnd": "^13.1.0",
     "react-dnd": "^15.1.1",
     "react-dnd-html5-backend": "^15.1.2",
     "react-dnd-touch-backend": "^15.1.1",
     "react-dom": "17.0.2",
     "react-redux": "^7.2.6",
-    "redux-thunk": "^2.4.1"
+    "react-tooltip": "^4.2.21",
+    "redux-thunk": "^2.4.1",
+    "sequelize": "^6.17.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.21",
@@ -27,6 +29,7 @@
     "eslint-config-next": "12.0.10",
     "postcss": "^8.4.6",
     "tailwindcss": "^3.0.23",
+    "ts-node": "^10.7.0",
     "typescript": "^4.6.2"
   }
 }

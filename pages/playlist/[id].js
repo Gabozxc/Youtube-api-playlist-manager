@@ -1,7 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
 
@@ -58,8 +56,7 @@ export default function Playlist({ data, id }) {
 
   return (
     <Layout>
-      <SearchXscroll />
-      <DndProvider backend={HTML5Backend}>
+      <SearchXscroll indexPage={true}/>
         <div className="titulo-search flex items-center justify-start flex-wrap">
           <h2 className="ml-7 mb-5 font-bold text-xl">Your Videos:</h2>
         </div>
@@ -77,7 +74,6 @@ export default function Playlist({ data, id }) {
             />
           </>
         )}
-      </DndProvider>
     </Layout>
   );
 }

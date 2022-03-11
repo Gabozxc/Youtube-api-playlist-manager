@@ -7,6 +7,9 @@ const Footer = () => {
         <Link href="/">
           <a className="text-white text-lg font-bold">Playlist Manager</a>
         </Link>
+        <Link href="/privacyPolicy">
+          <a className="text-white text-lg font-bold">Privacy Policy</a>
+        </Link>
       </div>
     </footer>
   );

@@ -7,7 +7,7 @@ import { Layout } from "../components/root";
 
 const PlayListHome = dynamic(() => import("../components/PlayListHome"));
 
-export default function Home() {
+export default function Login() {
   const session = useCheckSession();
   const router = useRouter();
 

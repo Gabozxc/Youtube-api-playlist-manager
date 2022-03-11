@@ -2,6 +2,9 @@ import axios from "axios";
 import { getSession } from "next-auth/react";
 import { getToken } from "next-auth/jwt";
 
+import db from "../config/db";
+import User from "../model/Usuario";
+
 const secret = process.env.SECRET;
 let accessToken;
 
@@ -10,6 +13,24 @@ const requestYoutube = async (req, res) => {
 
   if (!session) {
     return res.status(401).end();
+  }
+
+  if (session.user) {
+    db.sync()
+      .then(() => "Database synced!")
+      .catch((error) => console.log(error));
+
+    const user = await User.findOne({
+      where: {
+        email: session.user.email,
+      },
+    });
+
+    if (!user) {
+      await User.create({
+        email: session.user.email,
+      });
+    }
   }
 
   const token = await getToken({ req, secret, encryption: true });
