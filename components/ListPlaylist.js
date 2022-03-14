@@ -27,10 +27,10 @@ const ListPlaylist = ({ sub, actualPage }) => {
   const isActive = canDrop && isOver;
 
   return (
-    <li className="mb-2 flex justify-between">
+    <li className="mb-2 flex justify-between border-b-2 pb-2 sm:border-b-0 sm:pb-0">
       <Link href={`/playlist/${sub.id}`}>
         <a
-          className={`w-100 inline-block text-white ${isActive && "text-green-500"} ${actualPage && "font-bold"}`}
+          className={`pl-2 w-100 inline-block text-white ${isActive && "text-green-500"} ${actualPage && "font-bold"}`}
           ref={drop}
           role={"boxVideos"}
           id={sub.id}

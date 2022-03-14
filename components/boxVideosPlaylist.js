@@ -31,8 +31,8 @@ const BoxVideosPlaylist = ({ videos, idPlaylist, setLoading }) => {
       ref={drop}
       role={"boxVideos"}
       className={` ${
-        canDrop ? "border-blue-500  " : "rounded-lg  "
-      } border flex items-end justify-center flex-wrap rounded-lg w-[95%] my-0 mx-auto mb-5 min-h-[250px]`}
+        canDrop ? "sm:border-blue-500  " : "rounded-lg  "
+      } sm:border flex sm:items-end justify-center flex-wrap rounded-lg w-[160px] mx-auto my-0 mb-5 min-h-[250px] sm:w-[95%]`}
     >
       {videos.length > 0 &&
         videos?.map((sub) => (

@@ -56,24 +56,22 @@ export default function Playlist({ data, id }) {
 
   return (
     <Layout>
-      <SearchXscroll indexPage={true}/>
-        <div className="titulo-search flex items-center justify-start flex-wrap">
-          <h2 className="ml-7 mb-5 font-bold text-xl">Your Videos:</h2>
-        </div>
+      <SearchXscroll indexPage={true} />
+      <div className="titulo-search flex items-center justify-start flex-wrap">
+        <h2 className="mt-3 ml-1 sm:mt-0 sm:ml-7 mb-5 font-bold text-xl">Your Videos:</h2>
+      </div>
 
-        {loading ? (
-          <div className="flex justify-center mr-[10vw] mt-5">
-            <Loading />
-          </div>
-        ) : (
-          <>
-            <BoxVideosPlaylist
-              videos={data}
-              idPlaylist={id}
-              setLoading={setLoading}
-            />
-          </>
-        )}
+      {loading ? (
+        <div className="flex justify-center mr-[10vw] mt-5">
+          <Loading />
+        </div>
+      ) : (
+        <BoxVideosPlaylist
+          videos={data}
+          idPlaylist={id}
+          setLoading={setLoading}
+        />
+      )}
     </Layout>
   );
 }

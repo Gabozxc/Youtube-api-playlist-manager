@@ -17,7 +17,7 @@ export default function Login() {
 
   return (
     <Layout>
-      <div className="flex justify-center flex-col items-center bg-blue-600 my-0 mx-auto max-w-[50%] mt-10 p-5 rounded shadow-md	">
+      <div className="flex justify-center flex-col items-center bg-blue-600 my-0 mx-auto max-w-[95%] mt-10 p-5 rounded shadow-md	">
         <h1 className="text-xl font-bold text-white">Log in to your account</h1>
         <button
           className="bg-white hover:bg-transparent border-solid hover:bg-gray-100  text-blue-600 font-bold 

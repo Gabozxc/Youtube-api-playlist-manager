@@ -49,7 +49,7 @@ const Layout = ({ children }) => {
       </Head>
       <Header />
       <DndProvider backend={backend}>
-        <main className="flex row min-h-screen max-w-[95%]">
+        <main className="flex row min-h-screen">
           {session && <SideBarList />}
           <div className="w-[100%]">{children}</div>
         </main>

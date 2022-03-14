@@ -26,18 +26,18 @@ const SideBarList = () => {
 
   return (
     <aside
-      className={`p-5 pb-5 min-w-[188px] ${
+      className={`p-0 pb-5 min-w-[160px] sm:min-w-[188px] ${
         !canDrop ? "bg-blue-500" : "bg-blue-600"
       }`}
     >
       <button
-        className="hover:bg-blue-700 border-solid bg-blue-600 text-white font-bold px-2 min-h-[48px] rounded cursor-pointer mb-5"
+        className="hover:bg-blue-700 border-solid bg-blue-600 text-white font-bold px-2 min-h-[48px] rounded cursor-pointer mb-5 ml-2"
         onClick={() => setModal(true)}
       >
         Create a playlist
       </button>
       <ul className="h-[435px] max-h-[435px] overflow-hidden  overflow-y-auto">
-        <li className="mb-5 text-white font-bold">PLAYLISTS:</li>
+        <li className="mb-5 ml-2 text-white font-bold">PLAYLISTS:</li>
         {loading ? (
           <div className="ml-[10px]">
             <Loading />

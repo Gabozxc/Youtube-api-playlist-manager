@@ -27,7 +27,7 @@ const PreviewVideo = ({ title, url, video }) => {
         isDragging
           ? "border-blue-500 cursor-grabbing"
           : "	border-transparent cursor-grab	"
-      } border w-[250px] m-5 hover:bg-gray-200 flex flex-col rounded-lg p-3 shadow-lg`}
+      } border w-[250px] m-0 p-1 sm:p-3 sm:m-5 hover:bg-gray-200 flex flex-col rounded-lg shadow-lg`}
       data-tip="You can grab the video and drop it into a playlist."
     >
       {url ? (
