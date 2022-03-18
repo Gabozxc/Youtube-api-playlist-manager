@@ -4,29 +4,40 @@ import { getToken } from "next-auth/jwt";
 
 const secret = process.env.SECRET;
 let accessToken;
+let user;
 
 const getYTData = async (pageToken = "") => {
+  let error;
 
-  const { data } = await axios.get(
-    `https://www.googleapis.com/youtube/v3/playlists?mine=true&pageToken=${pageToken}&maxResults=50&part=snippet`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
+  const response = await axios
+    .get(
+      `https://www.googleapis.com/youtube/v3/playlists?mine=true&pageToken=${pageToken}&maxResults=50&part=snippet`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    .catch((err) => {
+      //save error
+      console.log(err.response.data);
+      error = {
+        error: err.response.data,
+        user: user,
+        token: accessToken,
+      };
+    });
 
-  if (data?.nextPageToken) {
-    return data.items.concat(await getYTData(data.nextPageToken));
+  if (error) {
+    return error;
   }
 
-  return data.items;
-  
+  return response.data.items;
 };
 
 const requestYoutube = async (req, res) => {
-
   const session = await getSession({ req });
+  user = await getSession({ req });
 
   if (!session) {
     return res.status(401).end();
@@ -38,8 +49,12 @@ const requestYoutube = async (req, res) => {
 
   const data = await getYTData();
 
-  res.status(200).json(data);
+  if (data.error) {
+    console.log(data);
+    return res.json(data);
+  }
 
+  res.status(200).json(data);
 };
 
 export default requestYoutube;

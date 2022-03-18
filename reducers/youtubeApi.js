@@ -7,7 +7,10 @@ import {
   CREATING_PLAYLIST_FAILURE,
   DELETING_PLAYLIST,
   DELETING_PLAYLIST_SUCCESS,
-  DELETING_PLAYLIST_FAILURE
+  DELETING_PLAYLIST_FAILURE,
+  ADDING_VIDEOS,
+  ADD_VIDEOS_SUCCESS,
+  ADD_VIDEOS_FAILURE
 } from "../types/typesYT";
 
 const initialState = {
@@ -36,7 +39,6 @@ const stateYoutubeApi = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        logIn: false,
         message: action.payload,
       };
     case CREATING_PLAYLIST:
@@ -68,6 +70,27 @@ const stateYoutubeApi = (state = initialState, action) => {
         playLists: state.playLists.filter(
           (playlist) => playlist.id !== action.payload
         ),
+      };
+    case DELETING_PLAYLIST_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        message: action.payload,
+      };
+    case ADDING_VIDEOS: 
+      return {
+        ...state,
+        loading: true,
+      };
+    case ADD_VIDEOS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case ADD_VIDEOS_FAILURE:
+      return {
+        ...state,
+        loading: false,
       };
     default:
       return state;

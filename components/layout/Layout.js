@@ -10,6 +10,7 @@ import SideBarList from "./SideBarList";
 import Footer from "./Footer";
 
 const Layout = ({ children }) => {
+  
   const { data: session } = useSession();
 
   let isTablet;

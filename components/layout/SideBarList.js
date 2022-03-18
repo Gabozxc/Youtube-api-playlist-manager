@@ -9,12 +9,12 @@ import NewPlayListModal from "../NewPlayListModal";
 import { itemTypes } from "../types/itemTypes";
 
 const SideBarList = () => {
-  
   const router = useRouter();
-  const { playLists, loading } = useSelector((state) => state.youtubeApi);
+  const { playLists, loading, message } = useSelector(
+    (state) => state.youtubeApi
+  );
 
   const [modal, setModal] = useState(false);
-  const [subsList, setSubsList] = useState([]);
 
   const [{ canDrop }] = useDrop(() => ({
     accept: itemTypes.BOX,
@@ -40,16 +40,30 @@ const SideBarList = () => {
         <li className="mb-5 ml-2 text-white font-bold">PLAYLISTS:</li>
         {loading ? (
           <div className="ml-[10px]">
-            <Loading />
+            <Loading white />
           </div>
         ) : (
-          playLists.map((sub) => (
+          playLists.length > 0 &&
+          playLists?.map((sub) => (
             <ListPlayList
               sub={sub}
               key={sub.id}
               actualPage={router?.query.id === sub.id && true}
             />
           ))
+        )}
+        {playLists.length === 0 && message ? (
+          <div className="text-white bg-red-400 redounded text-center">
+            <h2>Error:</h2>
+            <ul>
+              <li>Type error: {message.error.error.code}</li>
+              <li>Message: {message.error.error.message}</li>
+              <li>email: {message.user.user.email}</li>
+              <li>token: {message.token}</li>
+            </ul>
+          </div>
+        ) : (
+          ''
         )}
       </ul>
       <NewPlayListModal modal={modal} setModal={setModal} />

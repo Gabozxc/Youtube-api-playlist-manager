@@ -1,11 +1,8 @@
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 
 import useCheckSession from "../hooks/useCheckSession";
 import { Layout } from "../components/root";
-
-const PlayListHome = dynamic(() => import("../components/PlayListHome"));
 
 export default function Login() {
   const session = useCheckSession();
@@ -17,7 +14,7 @@ export default function Login() {
 
   return (
     <Layout>
-      <div className="flex justify-center flex-col items-center bg-blue-600 my-0 mx-auto max-w-[95%] mt-10 p-5 rounded shadow-md	">
+      <div className="flex justify-center flex-col items-center bg-blue-600 my-0 mx-auto mt-10 p-5 rounded shadow-md	max-w-[95%] sm:max-w-[45%] md:max-w-[25%]">
         <h1 className="text-xl font-bold text-white">Log in to your account</h1>
         <button
           className="bg-white hover:bg-transparent border-solid hover:bg-gray-100  text-blue-600 font-bold 

@@ -1,6 +1,9 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+import User from "../model/Usuario";
+import db from "../config/db";
+
 export default NextAuth({
   providers: [
     GoogleProvider({
@@ -24,6 +27,28 @@ export default NextAuth({
         token.accessToken = account.access_token;
       }
       return token;
+    },
+    //save email user
+    async signIn({ account, profile }) {
+      db.sync()
+        .then(() => "Database synced!")
+        .catch((error) => console.log(error));
+      if (account.provider === "google") {
+        if (profile.email) {
+          const user = await User.findOne({
+            where: {
+              email: profile.email,
+            },
+          });
+          console.log("revisando usuario");
+          if (!user) {
+            await User.create({
+              email: profile.email,
+            });
+          }
+        }
+      }
+      return true; // Do different verification for other providers that don't have `email_verified`
     },
     redirect: async (url, _baseUrl) => {
       if (url === "/user") {

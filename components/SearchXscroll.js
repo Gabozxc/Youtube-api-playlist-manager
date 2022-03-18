@@ -1,13 +1,23 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import ReactTooltip from "react-tooltip";
 
 import PreviewVideoFounded from "./PreviewVideoFounded";
+import AddVideosModal from "./AddVideosModal"
 import Loading from "./Loading";
 
 const SearchXscroll = ({ indexPage }) => {
+
   const [search, setSearch] = useState("");
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState([]);
+
+  const [videosSelect, setVideosSelect] = useState([]);
+  const [modal, setModal] = useState(false);
+
+  const modalOpen = () => {
+    setModal(!modal);
+  }
 
   const tooltipMessage = indexPage
     ? "You can drag and drop the videos you want into the list you want, by their name in the sidebar or in the playlist box below"
@@ -32,7 +42,7 @@ const SearchXscroll = ({ indexPage }) => {
   }, [searching, search]);
 
   return (
-    <section className="mt-5 max-w-[150px] sm:max-w-[90%] y-0 mx-auto ">
+    <section className="mt-5 max-w-[150px] sm:max-w-[90%] y-0 mx-auto relative">
       <form
         className="flex justify-center items-center field-input"
         onSubmit={(e) => {
@@ -48,6 +58,7 @@ const SearchXscroll = ({ indexPage }) => {
               >
                 !
               </span>
+              <ReactTooltip />
             </div>
           )}
           <input
@@ -87,11 +98,23 @@ const SearchXscroll = ({ indexPage }) => {
                   title={sub.snippet.title}
                   url={sub.snippet?.thumbnails?.high?.url}
                   video={sub}
+                  setVideoSelect={setVideosSelect}
+                  videoSelect={videosSelect}
                 />
               ))}
           </div>
         </>
       )}
+      {videosSelect.length > 0 && (
+        <section onClick={modalOpen} className="bg-blue-500 rounded-lg fixed bottom-1 right-5 p-5 cursor-pointer shadow-lg z-50" >
+          <h2 className="font-bold text-xl text-white">
+            SELECTED VIDEOS: {videosSelect.length}
+          </h2>
+        </section>
+      )}
+      <section className={modal ? "" : "hidden"}>
+        <AddVideosModal modal={modal}  modalOpen={modalOpen} videosSelect={videosSelect}/>
+      </section>
     </section>
   );
 };

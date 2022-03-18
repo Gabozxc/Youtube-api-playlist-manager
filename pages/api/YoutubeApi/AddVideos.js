@@ -4,50 +4,57 @@ import { getToken } from "next-auth/jwt";
 
 const secret = process.env.SECRET;
 let accessToken;
-let idVideo;
-let idPlaylist;
+let idVideos;
+let idPlaylists;
 
 const addYoutubeVideoPlaylist = async () => {
   //PlaylistItems API request to add video to a playlist
+
   const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&key=${process.env.YOUTUBE_API_KEY}`;
+  let data;
+  let error;
 
-  const datas = {
-    snippet: {
-      playlistId: idPlaylist,
-      resourceId: {
-        kind: "youtube#video",
-        videoId: idVideo,
-      },
-    },
-  };
+  //add mass videos in mass playlist
 
-  const options = {
-    method: "POST",
-    url: url,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    data: datas,
-  };
+  for (let i = 0; i < idPlaylists.length; i++) {
+    for (let j = 0; j < idVideos.length; j++) {
 
-  const data = await axios(options).catch(err => {
-    //get error
-    return err.response
-  }) 
+      const datas = {
+        snippet: {
+          playlistId: idPlaylists[i],
+          resourceId: {
+            kind: "youtube#video",
+            videoId: idVideos[j].id.videoId,
+          },
+        },
+      };
 
-  if (data?.nextPageToken) {
+      const options = {
+        method: "POST",
+        url: url,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        data: datas,
+      };
+
+      data = await axios(options)
+
+    }
+  }
+
+  if (data?.data.nextPageToken) {
     return data.items.concat(await addYoutubeVideoPlaylist(data.nextPageToken));
   }
 
-  return data.items;
+  return data.data;
 };
 
 const requestYoutube = async (req, res) => {
   const session = await getSession({ req });
 
-
-  idVideo = req.body.idVideo;
-  idPlaylist = req.body.idPlaylist;
+  idVideos = req.body.videos;
+  idPlaylists = req.body.playlists;
 
   if (!session) {
     return res.status(401).end();

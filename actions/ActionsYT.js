@@ -11,7 +11,10 @@ import {
   EDITING_PLAYLIST_FAILURE,
   DELETING_PLAYLIST,
   DELETING_PLAYLIST_SUCCESS,
-  DELETING_PLAYLIST_FAILURE
+  DELETING_PLAYLIST_FAILURE,
+  ADDING_VIDEOS,
+  ADD_VIDEOS_SUCCESS,
+  ADD_VIDEOS_FAILURE,
 } from "../types/typesYT";
 
 export const DownloadUserData = () => {
@@ -21,11 +24,12 @@ export const DownloadUserData = () => {
       const { data } = await axios.get("/api/YoutubeApi/getYTData", {
         withCredentials: true,
       });
-      console.log(data);
+      if(data.error){
+        return dispatch(downloadingFailure(data));
+      }
       dispatch(downloadingDataSucess(data));
     } catch (err) {
-      console.log(err);
-      dispatch(downloadingFailure(err));
+      dispatch(downloadingFailure(err.response));
     }
   };
 };
@@ -115,7 +119,7 @@ export const DeletePlaylist = (id) => {
     try {
       await axios.post("/api/YoutubeApi/deletePlaylistYT", {
         withCredentials: true,
-        idPlaylist:id,
+        idPlaylist: id,
       });
       dispatch(deletePlaylistSuccess(id));
     } catch (err) {
@@ -137,4 +141,35 @@ const deletePlaylistSuccess = (id) => ({
 const deletePlaylistError = (err) => ({
   type: DELETING_PLAYLIST_FAILURE,
   payload: err,
+});
+
+export const AddVideos = (videos, playlists) => {
+  return async (dispatch) => {
+    dispatch(addingVideos());
+    console.log(playlists)
+    try {
+      await axios.post("/api/YoutubeApi/AddVideos", {
+        withCredentials: true,
+        videos: videos,
+        playlists: playlists,
+      });
+      dispatch(addVideosSuccess());
+    } catch (err) {
+      //get error
+      console.log(err);
+      dispatch(addVideosError(err));
+    }
+  };
+};
+
+const addingVideos = () => ({
+  type: ADDING_VIDEOS,
+});
+
+const addVideosSuccess = () => ({
+  type: ADD_VIDEOS_SUCCESS,
+});
+
+const addVideosError = (err) => ({
+  type: ADD_VIDEOS_FAILURE,
 });

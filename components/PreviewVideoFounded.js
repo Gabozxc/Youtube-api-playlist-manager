@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { useDrag } from "react-dnd";
-import { itemTypes } from "./types/itemTypes";
 import Image from "next/image";
-import ReactTooltip from "react-tooltip";
 
-const PreviewVideo = ({ title, url, video }) => {
+import { itemTypes } from "./types/itemTypes";
+
+const PreviewVideo = ({ title, url, video, videoSelect, setVideoSelect }) => {
+  const [active, setActive] = useState(false);
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: itemTypes.BOX,
     item: { idVideo: video.id.videoId, video: video },
@@ -23,12 +26,26 @@ const PreviewVideo = ({ title, url, video }) => {
       ref={drag}
       role="Box"
       data-testid={`box-${title}`}
-      className={`${
+      onClick={() => {
+        if (videoSelect) {
+          if (!active) {
+            setVideoSelect([...videoSelect, video]);
+            setActive(true);
+          } else {
+            setVideoSelect(
+              videoSelect.filter(
+                (videos) => videos.id.videoId !== video.id.videoId
+              )
+            );
+            setActive(false);
+          }
+        }
+      }}
+      className={`border w-[250px] m-0 p-1 sm:p-3 sm:m-5 hover:bg-gray-200 flex flex-col rounded-lg shadow-md ${
         isDragging
           ? "border-blue-500 cursor-grabbing"
-          : "	border-transparent cursor-grab	"
-      } border w-[250px] m-0 p-1 sm:p-3 sm:m-5 hover:bg-gray-200 flex flex-col rounded-lg shadow-lg`}
-      data-tip="You can grab the video and drop it into a playlist."
+          : "border-transparent cursor-grab"
+      } ${active && "bg-gray-300"}`}
     >
       {url ? (
         <Image
@@ -42,7 +59,6 @@ const PreviewVideo = ({ title, url, video }) => {
         ""
       )}
       <h2 className="mb-4 mt-4 font-bold">{title}</h2>
-      <ReactTooltip />
     </div>
   );
 };
