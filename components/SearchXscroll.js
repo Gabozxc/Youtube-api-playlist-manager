@@ -1,56 +1,43 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { useState } from "react";
 import ReactTooltip from "react-tooltip";
+import { useDispatch, useSelector } from "react-redux";
 
+import { SearchVideo } from "../actions/ActionsYT";
 import PreviewVideoFounded from "./PreviewVideoFounded";
-import AddVideosModal from "./AddVideosModal"
+import AddVideosModal from "./AddVideosModal";
 import Loading from "./Loading";
 
 const SearchXscroll = ({ indexPage }) => {
 
-  const [search, setSearch] = useState("");
-  const [searching, setSearching] = useState(false);
-  const [results, setResults] = useState([]);
+  const dispatch = useDispatch();
+  const { loading, searchResults } = useSelector((state) => state.youtubeApi);
 
+  const [search, setSearch] = useState("");
   const [videosSelect, setVideosSelect] = useState([]);
   const [modal, setModal] = useState(false);
 
+  const SearchVideos = () => {
+    dispatch(SearchVideo(search));
+  };
+
   const modalOpen = () => {
     setModal(!modal);
-  }
+  };
 
   const tooltipMessage = indexPage
     ? "You can drag and drop the videos you want into the list you want, by their name in the sidebar or in the playlist box below"
     : "You can drag and drop the videos you want into the list you want, by their name in the sidebar.";
-
-  useEffect(() => {
-    const getYTData = async () => {
-      if (searching) {
-        try {
-          const { data } = await axios.post("/api/YoutubeApi/getVideosYT", {
-            withCredentials: true,
-            qSearch: search,
-          });
-          setSearching(false);
-          setResults(data);
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    };
-    getYTData();
-  }, [searching, search]);
 
   return (
     <section className="mt-5 max-w-[150px] sm:max-w-[90%] y-0 mx-auto relative">
       <form
         className="flex justify-center items-center field-input"
         onSubmit={(e) => {
-          e.preventDefault(), setSearching(true);
+          e.preventDefault(), SearchVideos();
         }}
       >
         <div className="relative mx-auto flex items-center">
-          {results.length > 0 && (
+          {searchResults.length > 0 && (
             <div className="hidden sm:block self bg-gray-600 rounded-full h-[20px] w-[20px] relative right-5 shadow-md hover:bg-gray-900">
               <span
                 className="text-xl text-white absolute top-[-5px] left-[7px] right-0 bottom-0"
@@ -75,45 +62,48 @@ const SearchXscroll = ({ indexPage }) => {
           />
         </div>
       </form>
-      {searching ? (
+      {loading ? (
         <div className="flex justify-center mr-[10vw] mt-5">
           <Loading />
         </div>
       ) : (
-        <>
+        <div className={`${searchResults.length === 0 && "hidden" }`}>
           <div className="titulo-search flex items-center justify-start flex-wrap">
-            <h2
-              className={`mt-5 mb-3 sm:mt-0 sm:mb-3 ml-7 font-bold text-xl ${
-                results.length <= 0 && "hidden"
-              }`}
-            >
+            <h2 className="mt-5 mb-3 sm:mt-0 sm:mb-3 ml-7 font-bold text-xl">
               SEARCH RESULTS:
             </h2>
           </div>
           <div className="flex items-baseline justify-center flex-wrap overflow-y-scroll max-h-[350px] overflow-x-hidden">
-            {results.length > 0 &&
-              results?.map((sub) => (
-                <PreviewVideoFounded
-                  key={sub.etag}
-                  title={sub.snippet.title}
-                  url={sub.snippet?.thumbnails?.high?.url}
-                  video={sub}
-                  setVideoSelect={setVideosSelect}
-                  videoSelect={videosSelect}
-                />
-              ))}
+            {searchResults.map( sub => (
+              <PreviewVideoFounded
+                key={sub.etag}
+                title={sub.snippet.title}
+                url={sub.snippet?.thumbnails?.high?.url}
+                video={sub}
+                setVideoSelect={setVideosSelect}
+                videoSelect={videosSelect}
+              />
+            ))}
           </div>
-        </>
+        </div>
       )}
       {videosSelect.length > 0 && (
-        <section onClick={modalOpen} className="bg-blue-500 rounded-lg fixed bottom-1 right-5 p-5 cursor-pointer shadow-lg z-50" >
+        <section
+          onClick={modalOpen}
+          className="bg-blue-500 rounded-lg fixed bottom-1 right-5 p-5 cursor-pointer shadow-lg z-50"
+        >
           <h2 className="font-bold text-xl text-white">
             SELECTED VIDEOS: {videosSelect.length}
           </h2>
         </section>
       )}
       <section className={modal ? "" : "hidden"}>
-        <AddVideosModal modal={modal}  modalOpen={modalOpen} videosSelect={videosSelect}/>
+        <AddVideosModal
+          modal={modal}
+          modalOpen={modalOpen}
+          videosSelect={videosSelect}
+          setVideosSelect={setVideosSelect}
+        />
       </section>
     </section>
   );

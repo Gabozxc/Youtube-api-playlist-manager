@@ -15,6 +15,8 @@ import {
   ADDING_VIDEOS,
   ADD_VIDEOS_SUCCESS,
   ADD_VIDEOS_FAILURE,
+  SEARCHING_VIDEO,
+  SEARCH_VIDEO_SUCCESS
 } from "../types/typesYT";
 
 export const DownloadUserData = () => {
@@ -24,7 +26,7 @@ export const DownloadUserData = () => {
       const { data } = await axios.get("/api/YoutubeApi/getYTData", {
         withCredentials: true,
       });
-      if(data.error){
+      if (data.error) {
         return dispatch(downloadingFailure(data));
       }
       dispatch(downloadingDataSucess(data));
@@ -146,7 +148,7 @@ const deletePlaylistError = (err) => ({
 export const AddVideos = (videos, playlists) => {
   return async (dispatch) => {
     dispatch(addingVideos());
-    console.log(playlists)
+    console.log(playlists);
     try {
       await axios.post("/api/YoutubeApi/AddVideos", {
         withCredentials: true,
@@ -173,3 +175,27 @@ const addVideosSuccess = () => ({
 const addVideosError = (err) => ({
   type: ADD_VIDEOS_FAILURE,
 });
+
+export const SearchVideo = (search) => {
+  return async (dispatch) => {
+    dispatch(searchingVideo());
+    try {
+      const { data } = await axios.post("/api/YoutubeApi/getVideosYT", {
+        withCredentials: true,
+        qSearch: search,
+      });
+      dispatch(searchVideoSuccess(data));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+};
+
+const searchingVideo = () => ({
+  type: SEARCHING_VIDEO,
+});
+
+const searchVideoSuccess = (data) => ({
+  type: SEARCH_VIDEO_SUCCESS,
+   payload: data
+})

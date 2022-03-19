@@ -4,7 +4,12 @@ import { useSelector, useDispatch } from "react-redux";
 import Loading from "./Loading";
 import { AddVideos } from "../actions/ActionsYT";
 
-const AddVideosModal = ({ modal, modalOpen, videosSelect }) => {
+const AddVideosModal = ({
+  modal,
+  modalOpen,
+  videosSelect,
+  setVideosSelect,
+}) => {
   const dispatch = useDispatch();
   const { playLists, loading } = useSelector((state) => state.youtubeApi);
 
@@ -16,6 +21,7 @@ const AddVideosModal = ({ modal, modalOpen, videosSelect }) => {
     const checkboxes = document.querySelectorAll(".checkbox");
 
     setPlaylistSelect([]);
+    setVideosSelect([]);
 
     checkboxes.forEach((checkbox) => {
       checkbox.checked = false;

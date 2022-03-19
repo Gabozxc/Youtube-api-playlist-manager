@@ -10,12 +10,15 @@ import {
   DELETING_PLAYLIST_FAILURE,
   ADDING_VIDEOS,
   ADD_VIDEOS_SUCCESS,
-  ADD_VIDEOS_FAILURE
+  ADD_VIDEOS_FAILURE,
+  SEARCHING_VIDEO,
+  SEARCH_VIDEO_SUCCESS
 } from "../types/typesYT";
 
 const initialState = {
-  playlistItems: false,
+  playlistItems: [],
   playLists: [],
+  searchResults: [],
   loading: false,
   logIn: false,
   message: "",
@@ -92,6 +95,17 @@ const stateYoutubeApi = (state = initialState, action) => {
         ...state,
         loading: false,
       };
+    case SEARCHING_VIDEO:
+      return {
+        ...state,
+        loading: true
+      }
+    case SEARCH_VIDEO_SUCCESS: 
+      return {
+        ...state,
+        loading: false,
+        searchResults: action.payload
+      }
     default:
       return state;
   }

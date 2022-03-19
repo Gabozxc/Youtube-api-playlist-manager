@@ -5,6 +5,7 @@ import Image from "next/image";
 import { itemTypes } from "./types/itemTypes";
 
 const PreviewVideo = ({ title, url, video, videoSelect, setVideoSelect }) => {
+  
   const [active, setActive] = useState(false);
 
   const [{ isDragging }, drag] = useDrag(() => ({
