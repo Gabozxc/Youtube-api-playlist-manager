@@ -51,14 +51,20 @@ export default function Playlist({ data, id }) {
   const session = useCheckSession();
 
   if (!session) {
-    return <h2>Without Session</h2>;
+    return (
+      <Layout>
+        <h2>Without Session</h2>
+      </Layout>
+    );
   }
 
   return (
     <Layout>
       <SearchXscroll indexPage={true} />
       <div className="titulo-search flex items-center justify-start flex-wrap">
-        <h2 className="mt-3 ml-1 sm:mt-0 sm:ml-7 mb-5 font-bold text-xl">Your Videos:</h2>
+        <h2 className="mt-3 ml-1 sm:mt-0 sm:ml-7 mb-5 font-bold text-xl">
+          Your Videos:
+        </h2>
       </div>
 
       {loading ? (

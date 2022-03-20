@@ -4,11 +4,9 @@ import { getToken } from "next-auth/jwt";
 
 const secret = process.env.SECRET;
 let accessToken;
-let user;
+let error;
 
 const getYTData = async (pageToken = "") => {
-  let error;
-
   const response = await axios
     .get(
       `https://www.googleapis.com/youtube/v3/playlists?mine=true&pageToken=${pageToken}&maxResults=50&part=snippet`,
@@ -19,25 +17,16 @@ const getYTData = async (pageToken = "") => {
       }
     )
     .catch((err) => {
-      //save error
-      console.log(err.response.data);
-      error = {
-        error: err.response.data,
-        user: user,
-        token: accessToken,
-      };
+      return (error = err.response?.data);
     });
 
-  if (error) {
-    return error;
-  }
+  if (error) return error;
 
   return response.data.items;
 };
 
 const requestYoutube = async (req, res) => {
   const session = await getSession({ req });
-  user = await getSession({ req });
 
   if (!session) {
     return res.status(401).end();
@@ -49,10 +38,7 @@ const requestYoutube = async (req, res) => {
 
   const data = await getYTData();
 
-  if (data.error) {
-    console.log(data);
-    return res.json(data);
-  }
+  if (error) return res.status(400).json(data);
 
   res.status(200).json(data);
 };

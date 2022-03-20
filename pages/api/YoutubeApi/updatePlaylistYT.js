@@ -5,6 +5,7 @@ import { getToken } from "next-auth/jwt";
 const secret = process.env.SECRET;
 let accessToken;
 let updatePlaylist;
+let error;
 
 const updatePlayListYT = async () => {
   //update the title and description of the playlist put
@@ -22,7 +23,11 @@ const updatePlayListYT = async () => {
         Authorization: `Bearer ${accessToken}`,
       },
     }
-  );
+  ).catch(err => {
+    return error = err.response?.data;
+  })
+
+  if (error) return error;
 
   return response.data;
 };
@@ -45,6 +50,8 @@ const requestYoutube = async (req, res) => {
   accessToken = token.accessToken;
 
   const data = await updatePlayListYT();
+
+  if (error) return res.status(400).json(data);
 
   res.status(200).json(data);
 };

@@ -16,7 +16,8 @@ import {
   ADD_VIDEOS_SUCCESS,
   ADD_VIDEOS_FAILURE,
   SEARCHING_VIDEO,
-  SEARCH_VIDEO_SUCCESS
+  SEARCH_VIDEO_SUCCESS,
+  SEARCH_VIDEO_FAILURE
 } from "../types/typesYT";
 
 export const DownloadUserData = () => {
@@ -26,9 +27,6 @@ export const DownloadUserData = () => {
       const { data } = await axios.get("/api/YoutubeApi/getYTData", {
         withCredentials: true,
       });
-      if (data.error) {
-        return dispatch(downloadingFailure(data));
-      }
       dispatch(downloadingDataSucess(data));
     } catch (err) {
       dispatch(downloadingFailure(err.response));
@@ -65,7 +63,7 @@ export const NewPlayList = (playlist) => {
       dispatch(creatingPlayListSucess(data));
     } catch (err) {
       console.log(err);
-      dispatch(creatingPlaylistFailure(err));
+      dispatch(creatingPlaylistFailure(err.response));
     }
   };
 };
@@ -97,7 +95,7 @@ export const EditPlaylist = (playlist) => {
       dispatch(EditingPlaylistSucess());
     } catch (err) {
       console.log(err);
-      dispatch(EditingPlaylistError(err));
+      dispatch(EditingPlaylistError(err.response));
     }
   };
 };
@@ -106,7 +104,7 @@ const EditingPlaylist = () => ({
   type: EDITING_PLAYLIST,
 });
 
-const EditingPlaylistSucess = (data) => ({
+const EditingPlaylistSucess = () => ({
   type: EDITING_PLAYLIST_SUCCESS,
 });
 
@@ -126,7 +124,7 @@ export const DeletePlaylist = (id) => {
       dispatch(deletePlaylistSuccess(id));
     } catch (err) {
       console.log(err);
-      dispatch(deletePlaylistError(err));
+      dispatch(deletePlaylistError(err.response))
     }
   };
 };
@@ -157,9 +155,7 @@ export const AddVideos = (videos, playlists) => {
       });
       dispatch(addVideosSuccess());
     } catch (err) {
-      //get error
-      console.log(err);
-      dispatch(addVideosError(err));
+      dispatch(addVideosError(err.response));
     }
   };
 };
@@ -174,6 +170,7 @@ const addVideosSuccess = () => ({
 
 const addVideosError = (err) => ({
   type: ADD_VIDEOS_FAILURE,
+  payload: err,
 });
 
 export const SearchVideo = (search) => {
@@ -187,6 +184,7 @@ export const SearchVideo = (search) => {
       dispatch(searchVideoSuccess(data));
     } catch (err) {
       console.log(err);
+      dispatch(searchVideoError(err.response));
     }
   };
 };
@@ -198,4 +196,9 @@ const searchingVideo = () => ({
 const searchVideoSuccess = (data) => ({
   type: SEARCH_VIDEO_SUCCESS,
    payload: data
+})
+
+const searchVideoError = (err) => ({
+  type: SEARCH_VIDEO_FAILURE,
+  payload: err,
 })

@@ -5,6 +5,7 @@ import { getToken } from "next-auth/jwt";
 const secret = process.env.SECRET;
 let accessToken;
 let newPlaylist;
+let error;
 
 const createPlayListYT = async () => {
 
@@ -22,7 +23,11 @@ const createPlayListYT = async () => {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
+  }).catch(err => {
+      return error = err.response?.data;
   })
+
+  if (error) return error;
 
   return res.data
 
@@ -47,6 +52,10 @@ const requestYoutube = async (req, res) => {
   accessToken = token.accessToken;
 
   const data = await createPlayListYT();
+
+  console.log(error)
+
+  if (error) return res.status(400).json(data);
 
   res.status(200).json(data);
 

@@ -2,6 +2,7 @@ import axios from "axios";
 
 let accessToken;
 let playlistId;
+let error;
 
 const getPlayListSong = async () => {
 
@@ -18,7 +19,11 @@ const getPlayListSong = async () => {
         Authorization: `Bearer ${accessToken}`,
       },
     }
-  );
+  ).catch(err => {
+    return error = err.response?.data
+  })
+
+  if(error) return error;
 
   if (data?.nextPageToken) {
     return data.items.concat(await getPlayListSong(data.nextPageToken));
@@ -33,12 +38,11 @@ const requestYoutube = async (req, res) => {
   playlistId = req.body.id;
   accessToken = req.body.token.accessToken
 
-  try {
-    const data = await getPlayListSong();
-    res.status(200).json(data);
-  }catch(err){
-    res.status(200).json(err);
-  }
+  const data = await getPlayListSong();
+
+  if (error) return res.status(400).json(data);
+
+  res.status(200).json(data);
   
 };
 

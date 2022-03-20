@@ -1,9 +1,5 @@
-import dynamic from "next/dynamic";
-
 import useCheckSession from "../hooks/useCheckSession";
-import { Layout } from "../components/root";
-
-const PlayListHome = dynamic(() => import("../components/PlayListHome"));
+import { Layout, SearchXscroll } from "../components/root";
 
 export default function Home() {
 
@@ -18,7 +14,7 @@ export default function Home() {
           <h2 className="text-white mb-2">The application does not store any sensitive information, we only access the data necessary to manage your youtube playlist.</h2>
         </div>
       )}
-      {session && <PlayListHome />}
+      {session && <SearchXscroll />}
     </Layout>
   );
 }

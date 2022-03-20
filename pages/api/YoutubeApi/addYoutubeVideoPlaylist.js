@@ -6,6 +6,7 @@ const secret = process.env.SECRET;
 let accessToken;
 let idVideo;
 let idPlaylist;
+let error;
 
 const addYoutubeVideoPlaylist = async () => {
   //PlaylistItems API request to add video to a playlist
@@ -30,21 +31,18 @@ const addYoutubeVideoPlaylist = async () => {
     data: datas,
   };
 
-  const data = await axios(options).catch(err => {
+  const data = await axios(options).catch((err) => {
     //get error
-    return err.response
-  }) 
+    return (error = err.response?.data);
+  });
 
-  if (data?.nextPageToken) {
-    return data.items.concat(await addYoutubeVideoPlaylist(data.nextPageToken));
-  }
+  if (error) return error;
 
   return data.items;
 };
 
 const requestYoutube = async (req, res) => {
   const session = await getSession({ req });
-
 
   idVideo = req.body.idVideo;
   idPlaylist = req.body.idPlaylist;
@@ -59,6 +57,8 @@ const requestYoutube = async (req, res) => {
 
   const data = await addYoutubeVideoPlaylist();
 
+  if (error) return res.status(400).json(data);
+    
   res.status(200).json(data);
 };
 

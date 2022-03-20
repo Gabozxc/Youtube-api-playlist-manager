@@ -2,7 +2,9 @@ import Image from "next/image";
 import axios from "axios";
 
 const PreviewVideo = ({ title, url, id, setLoading, videos }) => {
+
   const deleteVideoFromPlaylist = async (id) => {
+
     setLoading(true);
     await axios.post("/api/YoutubeApi/deleteVideoFromPlaylist", {
       withCredentials: true,
@@ -12,6 +14,7 @@ const PreviewVideo = ({ title, url, id, setLoading, videos }) => {
     const index = videos.findIndex((video) => video.id === id);
     videos.splice(index, 1);
     setLoading(false);
+    
   };
 
   return (

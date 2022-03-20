@@ -24,7 +24,7 @@ const requestYoutube = async (req, res) => {
     } catch (err) {
       const code = err?.response?.status;
 
-      if (code >= 400 || err?.response.data.error === "invalid_token") {
+      if (code >= 400 || err?.response?.data?.error === "invalid_token") {
         return res.status(200).json({ token: false });
       }
     }

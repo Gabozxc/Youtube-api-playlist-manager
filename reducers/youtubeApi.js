@@ -12,7 +12,8 @@ import {
   ADD_VIDEOS_SUCCESS,
   ADD_VIDEOS_FAILURE,
   SEARCHING_VIDEO,
-  SEARCH_VIDEO_SUCCESS
+  SEARCH_VIDEO_SUCCESS,
+  SEARCH_VIDEO_FAILURE,
 } from "../types/typesYT";
 
 const initialState = {
@@ -38,33 +39,11 @@ const stateYoutubeApi = (state = initialState, action) => {
         loading: false,
         playLists: action.payload,
       };
-    case DOWNLOADING_DATA_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        message: action.payload,
-      };
-    case CREATING_PLAYLIST:
-      return {
-        ...state,
-        loading: true,
-      };
     case CREATING_PLAYLIST_SUCCESS:
       return {
         ...state,
         loading: false,
         playLists: [action.payload, ...state.playLists],
-      };
-    case CREATING_PLAYLIST_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        message: action.payload,
-      };
-    case DELETING_PLAYLIST:
-      return {
-        ...state,
-        loading: true,
       };
     case DELETING_PLAYLIST_SUCCESS:
       return {
@@ -74,38 +53,32 @@ const stateYoutubeApi = (state = initialState, action) => {
           (playlist) => playlist.id !== action.payload
         ),
       };
+    case SEARCH_VIDEO_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        searchResults: action.payload,
+      };
+    case SEARCHING_VIDEO:
+    case ADD_VIDEOS_SUCCESS:
+    case ADDING_VIDEOS:
+    case DELETING_PLAYLIST:
+    case CREATING_PLAYLIST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case ADD_VIDEOS_FAILURE:
     case DELETING_PLAYLIST_FAILURE:
+    case DELETING_PLAYLIST_FAILURE:
+    case CREATING_PLAYLIST_FAILURE:
+    case SEARCH_VIDEO_FAILURE:
+    case DOWNLOADING_DATA_FAILURE:
       return {
         ...state,
         loading: false,
         message: action.payload,
       };
-    case ADDING_VIDEOS: 
-      return {
-        ...state,
-        loading: true,
-      };
-    case ADD_VIDEOS_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-      };
-    case ADD_VIDEOS_FAILURE:
-      return {
-        ...state,
-        loading: false,
-      };
-    case SEARCHING_VIDEO:
-      return {
-        ...state,
-        loading: true
-      }
-    case SEARCH_VIDEO_SUCCESS: 
-      return {
-        ...state,
-        loading: false,
-        searchResults: action.payload
-      }
     default:
       return state;
   }

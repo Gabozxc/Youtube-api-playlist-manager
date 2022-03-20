@@ -5,16 +5,23 @@ import { getToken } from "next-auth/jwt";
 const secret = process.env.SECRET;
 let accessToken;
 let idPlaylist;
+let error;
 
 const deletePlaylist = async () => {
-  const response = await axios.delete(
-    `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${idPlaylist}&key=${process.env.YOUTUBE_API_KEY}`,
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    }
-  );
+  const response = await axios
+    .delete(
+      `https://www.googleapis.com/youtube/v3/playlists?part=snippet&id=${idPlaylist}&key=${process.env.YOUTUBE_API_KEY}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
+    .catch((error) => {
+      return (error = error.response?.data);
+    });
+
+  if (error) return error;
 
   return response.data;
 };
@@ -34,6 +41,8 @@ const requestYoutube = async (req, res) => {
 
   const data = await deletePlaylist();
 
+  if (error) return res.status(400).json(data);
+    
   res.status(200).json(data);
 };
 

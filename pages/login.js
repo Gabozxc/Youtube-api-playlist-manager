@@ -5,11 +5,12 @@ import useCheckSession from "../hooks/useCheckSession";
 import { Layout } from "../components/root";
 
 export default function Login() {
+  
   const session = useCheckSession();
   const router = useRouter();
 
   if (session) {
-    router.redirect("/");
+    router.push("/");
   }
 
   return (

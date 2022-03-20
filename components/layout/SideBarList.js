@@ -54,12 +54,10 @@ const SideBarList = () => {
         )}
         {playLists.length === 0 && message ? (
           <div className="text-white bg-red-400 redounded text-center">
-            <h2>Error:</h2>
+            <h2>Error: {message.data.error.code}</h2>
             <ul>
-              <li>Type error: {message.error.error.code}</li>
-              <li>Message: {message.error.error.message}</li>
-              <li>email: {message.user.user.email}</li>
-              <li>token: {message.token}</li>
+              <li>Reason: {message.data.error.errors[0].reason}</li>
+              <li>{message.data.error.message}</li>
             </ul>
           </div>
         ) : (
