@@ -3,24 +3,24 @@ import { useDispatch } from "react-redux";
 
 import { EditPlaylist, DeletePlaylist } from "../actions/ActionsYT";
 
-const NewPlayListModal = ({ modal, setModal, sub }) => {
+const NewPlayListModal = ({ modal, setModal, playlistSelect }) => {
 
   const dispatch = useDispatch();
 
   const [playlist, setPlaylist] = useState({
-    title: sub.snippet.title,
-    description: sub.snippet.description,
-    id: sub.id,
+    title: playlistSelect.snippet.title,
+    description: playlistSelect.snippet.description,
+    id: playlistSelect.id,
   });
 
   const updatePlaylist = async () => {
     dispatch(EditPlaylist(playlist));
-    sub.snippet.title = playlist.title;
+    playlistSelect.snippet.title = playlist.title;
     setModal(false);
   };
 
   const deletePlaylist = async () => {
-    dispatch(DeletePlaylist(sub.id));
+    dispatch(DeletePlaylist(playlistSelect.id));
     setModal(false);
   };
 
@@ -36,7 +36,7 @@ const NewPlayListModal = ({ modal, setModal, sub }) => {
         <div className="relative bg-blue-500 rounded-lg shadow-md">
           <div className="flex justify-between bg-blue-500 items-start p-5 rounded-t border-b dark:border-white">
             <h3 className="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">
-              Editing playlist {sub.snippet.title}
+              Editing playlist {playlistSelect.snippet.title}
             </h3>
             <button
               type="button"

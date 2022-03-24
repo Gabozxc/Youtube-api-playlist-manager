@@ -14,6 +14,12 @@ const NewPlayListModal = ({ modal, setModal }) => {
 
   const createPlaylist = async () => {
     dispatch(NewPlayList(playlist));
+    setModal(!modal);
+    setPlaylist({
+      title: "",
+      description: "",
+      privacyStatus: "public",
+    })
   };
 
   return (

@@ -1,20 +1,13 @@
 import Image from "next/image";
-import axios from "axios";
+import {useDispatch} from "react-redux";
+import {DeleteVideoFromPlaylist} from "../actions/ActionsYT";
 
-const PreviewVideo = ({ title, url, id, setLoading, videos }) => {
+const PreviewVideo = ({ title, url, idPlaylist, idVideo }) => {
 
-  const deleteVideoFromPlaylist = async (id) => {
+  const dispatch = useDispatch();
 
-    setLoading(true);
-    await axios.post("/api/YoutubeApi/deleteVideoFromPlaylist", {
-      withCredentials: true,
-      idVideo: id,
-    });
-    //remove video from array
-    const index = videos.findIndex((video) => video.id === id);
-    videos.splice(index, 1);
-    setLoading(false);
-    
+  const deleteVideoFromPlaylist = async () => {
+    dispatch(DeleteVideoFromPlaylist(idVideo, idPlaylist));
   };
 
   return (
@@ -31,8 +24,7 @@ const PreviewVideo = ({ title, url, id, setLoading, videos }) => {
         ""
       )}
       <button
-        onClick={(e) => deleteVideoFromPlaylist(e.target.id)}
-        id={id}
+        onClick={deleteVideoFromPlaylist}
         className="bg-red-500 hover:bg-transparent border-solid hover:bg-red-700 text-white font-bold py-2 px-1 rounded cursor-pointer hidden pointer-events-none mt-2 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 group-hover:block group-hover:pointer-events-auto w-[120px] sm:w-[200px] "
       >
         Delete from the playlist

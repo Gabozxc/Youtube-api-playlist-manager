@@ -4,26 +4,24 @@ import { useDrop } from "react-dnd";
 import { itemTypes } from "./types/itemTypes";
 import PreviewVideo from "./PreviewVideo";
 
-const BoxVideosPlaylist = ({ videos, idPlaylist, setLoading }) => {
+const BoxVideosPlaylist = ({ videos, idPlaylist }) => {
   const [{ canDrop }, drop] = useDrop(
     () => ({
       accept: itemTypes.BOX,
       drop: async (e) => (
-        setLoading(true),
         await axios.post("/api/YoutubeApi/addYoutubeVideoPlaylist", {
           withCredentials: true,
           idPlaylist: idPlaylist,
           idVideo: e.idVideo,
         }),
-        videos.push(e.video),
-        setLoading(false)
+        videos.push(e.video)
       ),
       collect: (monitor) => ({
         isOver: monitor.isOver(),
         canDrop: monitor.canDrop(),
       }),
     }),
-    [idPlaylist, setLoading]
+    [idPlaylist]
   );
 
   return (
@@ -40,9 +38,9 @@ const BoxVideosPlaylist = ({ videos, idPlaylist, setLoading }) => {
             key={sub.id}
             title={sub.snippet.title}
             url={sub.snippet?.thumbnails?.high?.url}
-            id={sub.id}
+            idPlaylist={idPlaylist}
+            idVideo={sub.id}
             videos={videos}
-            setLoading={setLoading}
           />
         ))}
     </section>

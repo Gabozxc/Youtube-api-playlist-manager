@@ -3,6 +3,7 @@ import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 import vixLogo from "/public/images/logo-380x98.png";
 
@@ -10,6 +11,8 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
+
+  const { playListObject } = useSelector((state) => state.youtubeApi);
 
   return (
     <header className="bg-blue-500 p-5 relative">
@@ -28,13 +31,30 @@ const Header = () => {
         </div>
         <div className="hidden sm:block">
           {session ? (
-            <button
-              onClick={() => signOut("google")}
-              className="bg-red-500 hover:bg-transparent border-solid	 hover:bg-red-700  text-white font-bold 
+            <div className="flex items-center">
+              {playListObject.length === 0 ? (
+                ""
+              ) : (
+                <Link href="/myPlaylist">
+                  <a
+                    className={`text-white mr-4 font-bold border-b-2 ${
+                      router.asPath === "/myPlaylist"
+                        ? "border-white"
+                        : "border-transparent"
+                    }`}
+                  >
+                    My Playlists
+                  </a>
+                </Link>
+              )}
+              <button
+                onClick={() => signOut("google")}
+                className="bg-red-500 hover:bg-transparent border-solid	 hover:bg-red-700  text-white font-bold 
                 py-2 px-4 rounded cursor-pointer"
-            >
-              Log out
-            </button>
+              >
+                Log out
+              </button>
+            </div>
           ) : (
             <Link href="/login">
               <a
@@ -72,56 +92,71 @@ const Header = () => {
       >
         <div className="flex flex-col items-center justify-center">
           <ul className="flex flex-col items-center justify-center">
-            <>
-              <li className="mt-5">
-                <Link href="/">
-                  <a className="text-white text-lg font-bold max-w-[100px]">
-                    <Image src={vixLogo} alt="Vix vixLogo" priority={true} />
+            <li className="mt-5">
+              <Link href="/">
+                <a className="text-white text-lg font-bold max-w-[100px]">
+                  <Image src={vixLogo} alt="Vix vixLogo" priority={true} />
+                </a>
+              </Link>
+            </li>
+            <li className="mt-5">
+              <Link href="/">
+                <a className="text-white text-lg font-bold max-w-[120px] sm:max-w-[250px] ">
+                  Home
+                </a>
+              </Link>
+            </li>
+            <li className="mt-5">
+              {playListObject.length === 0 ? (
+                ""
+              ) : (
+                <Link href="/myPlaylist">
+                  <a
+                    className={`text-white mr-4 font-bold border-b-2 ${
+                      router.asPath === "/myPlaylist"
+                        ? "border-white"
+                        : "border-transparent"
+                    }`}
+                  >
+                    My Playlists
                   </a>
                 </Link>
-              </li>
-              <li className="mt-5">
-                <a
-                  className="text-white text-lg font-bold max-w-[120px] sm:max-w-[250px]"
-                  onClick={() => setOpen(false)}
-                >
-                  Close menu
-                </a>
-              </li>
-              {session ? (
-                <>
-                  <li className="mt-5">
-                    <Link href="/">
-                      <a className="text-white text-lg font-bold max-w-[120px] sm:max-w-[250px] ">
-                        Home
-                      </a>
-                    </Link>
-                  </li>
-                  <li className="mt-5">
-                    <button
-                      onClick={() => signOut("google")}
-                      className="bg-red-500 hover:bg-transparent border-solid	 hover:bg-red-700  text-white font-bold 
-                py-2 px-4 rounded cursor-pointer"
-                    >
-                      Log out
-                    </button>
-                  </li>
-                </>
-              ) : (
+              )}
+            </li>
+            <li className="mt-5">
+              <a
+                className="text-white text-lg font-bold max-w-[120px] sm:max-w-[250px]"
+                onClick={() => setOpen(false)}
+              >
+                Close menu
+              </a>
+            </li>
+            {session ? (
+              <>
                 <li className="mt-5">
-                  <Link href="/login">
-                    <a
-                      className={`bg-blue-600 hover:bg-transparent border-solid	 hover:bg-blue-800  text-white font-bold 
+                  <button
+                    onClick={() => signOut("google")}
+                    className="bg-red-500 hover:bg-transparent border-solid	 hover:bg-red-700  text-white font-bold 
+                py-2 px-4 rounded cursor-pointer"
+                  >
+                    Log out
+                  </button>
+                </li>
+              </>
+            ) : (
+              <li className="mt-5">
+                <Link href="/login">
+                  <a
+                    className={`bg-blue-600 hover:bg-transparent border-solid	 hover:bg-blue-800  text-white font-bold 
               py-2  px-4 rounded cursor-pointer ${
                 router.asPath === "/login" && "hidden"
               }`}
-                    >
-                      Login
-                    </a>
-                  </Link>
-                </li>
-              )}
-            </>
+                  >
+                    Login
+                  </a>
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </nav>

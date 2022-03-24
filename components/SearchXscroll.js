@@ -1,5 +1,4 @@
 import { useState } from "react";
-import ReactTooltip from "react-tooltip";
 import { useDispatch, useSelector } from "react-redux";
 
 import { SearchVideo } from "../actions/ActionsYT";
@@ -8,7 +7,6 @@ import AddVideosModal from "./AddVideosModal";
 import Loading from "./Loading";
 
 const SearchXscroll = ({ indexPage }) => {
-
   const dispatch = useDispatch();
   const { loading, searchResults } = useSelector((state) => state.youtubeApi);
 
@@ -24,12 +22,8 @@ const SearchXscroll = ({ indexPage }) => {
     setModal(!modal);
   };
 
-  const tooltipMessage = indexPage
-    ? "You can drag and drop the videos you want into the list you want, by their name in the sidebar or in the playlist box below"
-    : "You can drag and drop the videos you want into the list you want, by their name in the sidebar.";
-
   return (
-    <section className="mt-5 max-w-[150px] sm:max-w-[90%] y-0 mx-auto relative">
+    <section className=" max-w-[150px] sm:max-w-[90%] y-0 mx-auto relative">
       <form
         className="flex justify-center items-center field-input"
         onSubmit={(e) => {
@@ -37,17 +31,6 @@ const SearchXscroll = ({ indexPage }) => {
         }}
       >
         <div className="relative mx-auto flex items-center">
-          {searchResults.length > 0 && (
-            <div className="hidden sm:block self bg-gray-600 rounded-full h-[20px] w-[20px] relative right-5 shadow-md hover:bg-gray-900">
-              <span
-                className="text-xl text-white absolute top-[-5px] left-[7px] right-0 bottom-0"
-                data-tip={tooltipMessage}
-              >
-                !
-              </span>
-              <ReactTooltip />
-            </div>
-          )}
           <input
             type="search"
             className="bg-purple-white shadow rounded border-0 p-3 max-w-[150px] mr-1 "
@@ -67,14 +50,14 @@ const SearchXscroll = ({ indexPage }) => {
           <Loading />
         </div>
       ) : (
-        <div className={`${searchResults.length === 0 && "hidden" }`}>
+        <div className={`${searchResults.length === 0 && "hidden"}`}>
           <div className="titulo-search flex items-center justify-start flex-wrap">
             <h2 className="mt-5 mb-3 sm:mt-0 sm:mb-3 ml-7 font-bold text-xl">
               SEARCH RESULTS:
             </h2>
           </div>
           <div className="flex items-baseline justify-center flex-wrap overflow-y-scroll max-h-[350px] overflow-x-hidden">
-            {searchResults.map( sub => (
+            {searchResults.map((sub) => (
               <PreviewVideoFounded
                 key={sub.etag}
                 title={sub.snippet.title}

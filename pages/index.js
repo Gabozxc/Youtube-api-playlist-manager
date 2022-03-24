@@ -1,9 +1,13 @@
+import { useSelector } from "react-redux";
+
 import useCheckSession from "../hooks/useCheckSession";
-import { Layout, SearchXscroll } from "../components/root";
+import { Layout, SearchXscroll, Loading} from "../components/root";
 
 export default function Home() {
 
   const session = useCheckSession();
+  const { playListObject } = useSelector((state) => state.youtubeApi);
+
 
   return (
     <Layout>
@@ -14,7 +18,10 @@ export default function Home() {
           <h2 className="text-white mb-2">The application does not store any sensitive information, we only access the data necessary to manage your youtube playlist.</h2>
         </div>
       )}
-      {session && <SearchXscroll />}
+      <div className="flex justify-center mt-5">
+      {session && <>{ playListObject.length === 0 ? <Loading /> : <SearchXscroll />}</>}
+      </div>
+      
     </Layout>
   );
 }

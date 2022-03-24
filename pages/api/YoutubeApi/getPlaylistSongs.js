@@ -4,7 +4,7 @@ let accessToken;
 let playlistId;
 let error;
 
-const getPlayListSong = async () => {
+const getPlayListSong = async (pageToken = '') => {
 
   const { data } = await axios.get(
     `https://www.googleapis.com/youtube/v3/playlistItems`,
@@ -13,6 +13,7 @@ const getPlayListSong = async () => {
         part: "snippet",
         maxResults: "50",
         playlistId,
+        pageToken,
         key: process.env.YOUTUBE_API_KEY,
       },
       headers: {

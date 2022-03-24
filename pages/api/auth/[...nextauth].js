@@ -40,7 +40,6 @@ export default NextAuth({
               email: profile.email,
             },
           });
-          console.log("revisando usuario");
           if (!user) {
             await User.create({
               email: profile.email,
@@ -48,7 +47,7 @@ export default NextAuth({
           }
         }
       }
-      return true; // Do different verification for other providers that don't have `email_verified`
+      return true;
     },
     redirect: async (url, _baseUrl) => {
       if (url === "/user") {

@@ -10,7 +10,7 @@ let error;
 
 const addYoutubeVideoPlaylist = async () => {
   const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&key=${process.env.YOUTUBE_API_KEY}`;
-  let data;
+  let videos = []
 
   for (let i = 0; i < idPlaylists.length; i++) {
     for (let j = 0; j < idVideos.length; j++) {
@@ -33,15 +33,18 @@ const addYoutubeVideoPlaylist = async () => {
         data: datas,
       };
 
-      data = await axios(options).catch((err) => {
+      const {data} = await axios(options).catch((err) => {
         return (error = err.response?.data);
       });
+
+      videos = [...videos, data]
+
     }
   }
-
   if (error) return error;
+  
+  return videos;
 
-  return data.data;
 };
 
 const requestYoutube = async (req, res) => {

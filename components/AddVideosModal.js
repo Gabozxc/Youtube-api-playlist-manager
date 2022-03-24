@@ -11,7 +11,7 @@ const AddVideosModal = ({
   setVideosSelect,
 }) => {
   const dispatch = useDispatch();
-  const { playLists, loading } = useSelector((state) => state.youtubeApi);
+  const { playListObject, loading } = useSelector((state) => state.youtubeApi);
 
   const [playlistSelect, setPlaylistSelect] = useState([]);
 
@@ -26,6 +26,7 @@ const AddVideosModal = ({
     checkboxes.forEach((checkbox) => {
       checkbox.checked = false;
     });
+    modalOpen()
   };
 
   const selectAll = () => {
@@ -71,21 +72,24 @@ const AddVideosModal = ({
             ) : (
               <>
                 <ul className="flex flex-col items-start overflow-y-scroll max-h-[40vh]">
-                  {playLists.length > 0 &&
-                    playLists.map((playlist) => (
-                      <li className="w-[90%] p-2 " key={playlist.id}>
+                  {playListObject.length > 0 &&
+                    playListObject.map((object) => (
+                      <li
+                        className="w-[90%] p-2 "
+                        key={object.playlist.id + object.playlist.etag}
+                      >
                         <div className="flex items-center justify-start">
                           <label
-                            htmlFor={playlist.id}
-                            name={playlist.id}
+                            htmlFor={object.playlist.id}
+                            name={object.playlist.id}
                             className="w-full rounded-full bg-blue-500 text-white p-2"
                           >
-                            {playlist.snippet.title}
+                            {object.playlist.snippet.title}
                           </label>
                           <input
                             type="checkbox"
-                            id={playlist.id}
-                            value={playlist.id}
+                            id={object.playlist.id}
+                            value={object.playlist.id}
                             className="checkbox"
                             onChange={(e) => {
                               if (e.target.checked) {
