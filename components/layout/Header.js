@@ -8,11 +8,11 @@ import { useSelector } from "react-redux";
 import vixLogo from "/public/images/logo-380x98.png";
 
 const Header = () => {
-  const [open, setOpen] = useState(false);
-  const { data: session } = useSession();
   const router = useRouter();
+  const { data: session } = useSession();
 
-  const { playListObject } = useSelector((state) => state.youtubeApi);
+  const [open, setOpen] = useState(false);
+  const { loading } = useSelector((state) => state.youtubeApi);
 
   return (
     <header className="bg-blue-500 p-5 relative">
@@ -32,9 +32,7 @@ const Header = () => {
         <div className="hidden sm:block">
           {session ? (
             <div className="flex items-center">
-              {playListObject.length === 0 ? (
-                ""
-              ) : (
+              {!loading && (
                 <Link href="/myPlaylist">
                   <a
                     className={`text-white mr-4 font-bold border-b-2 ${
@@ -107,9 +105,7 @@ const Header = () => {
               </Link>
             </li>
             <li className="mt-5">
-              {playListObject.length === 0 ? (
-                ""
-              ) : (
+              {!loading && (
                 <Link href="/myPlaylist">
                   <a
                     className={`text-white mr-4 font-bold border-b-2 ${

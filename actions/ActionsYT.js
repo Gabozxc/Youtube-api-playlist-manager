@@ -21,7 +21,8 @@ import {
   DELETING_VIDEO_FROM_PLAYLIST,
   DELETE_VIDEO_FROM_PLAYLIST_SUCCESS,
   DELETE_VIDEO_FROM_PLAYLIST_FAILURE,
-  CLEAN_MESSAGE
+  CLEAN_MESSAGE,
+  DOWNLOADING_VIDEOS,
 } from "../types/typesYT";
 
 export const DownloadUserData = () => {
@@ -32,22 +33,15 @@ export const DownloadUserData = () => {
       const { data } = await axios.get("/api/YoutubeApi/getYTData", {
         withCredentials: true,
       });
-
-
-      const playlistsWithVideos = await axios.post(
-        "/api/YoutubeApi/getVideosFromPlaylists",
-        {
-          withCredentials: true,
-          params: {
-            playlistIdArray: data
-          }
-        }
-      );
-
-      dispatch(downloadingDataSucess(playlistsWithVideos.data));
-
+      const playlistWithVideosEmpty = data.map((playlist) => {
+        return {
+          playlist: playlist,
+          videos: [],
+        };
+      });
+      dispatch(downloadingDataSucess(playlistWithVideosEmpty));
     } catch (err) {
-      console.log(err.response)
+      console.log(err);
       dispatch(downloadingFailure(err.response.data.error.message));
     }
   };
@@ -64,6 +58,50 @@ const downloadingDataSucess = (data) => ({
 
 const downloadingFailure = (data) => ({
   type: DOWNLOADING_DATA_FAILURE,
+  payload: data,
+});
+
+export const DonwloadVideoEachPlaylist = (data) => {
+  return async (dispatch) => {
+    dispatch(downloadingVideos());
+    try {
+      const playlistsArray = data.map((playlist) => {
+        return {
+          ...playlist,
+        };
+      });
+
+      console.log(playlistsArray);
+
+      const playlistsWithVideos = await axios.post(
+        "/api/YoutubeApi/getVideosFromPlaylists",
+        {
+          withCredentials: true,
+          params: {
+            playlistIdArray: playlistsArray,
+          },
+        }
+      );
+
+      dispatch(downloadingVideosSucess(playlistsWithVideos.data));
+    } catch (err) {
+      console.log(err.response);
+      dispatch(downloadingVideosFailure(err.response.data.error.message));
+    }
+  };
+};
+
+const downloadingVideos = () => ({
+  type: DOWNLOADING_VIDEOS,
+});
+
+const downloadingVideosSucess = (data) => ({
+  type: DOWNLOADING_VIDEOS_SUCCESS,
+  payload: data,
+});
+
+const downloadingVideosFailure = (data) => ({
+  type: DOWNLOADING_VIDEOS_FAILURE,
   payload: data,
 });
 
@@ -174,7 +212,7 @@ export const AddVideos = (videos, playlists) => {
     dispatch(addingVideos());
 
     try {
-      const {data} = await axios.post("/api/YoutubeApi/AddVideos", {
+      const { data } = await axios.post("/api/YoutubeApi/AddVideos", {
         withCredentials: true,
         videos: videos,
         playlists: playlists,
@@ -182,8 +220,8 @@ export const AddVideos = (videos, playlists) => {
 
       const playlistsWithVideos = {
         playlists: playlists,
-        videos: data
-      }
+        videos: data,
+      };
 
       dispatch(addVideosSuccess(playlistsWithVideos));
     } catch (err) {
@@ -273,4 +311,4 @@ export const CleanMessage = () => {
   return {
     type: CLEAN_MESSAGE,
   };
-}
+};

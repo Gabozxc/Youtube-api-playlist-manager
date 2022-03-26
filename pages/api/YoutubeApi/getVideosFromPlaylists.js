@@ -2,6 +2,7 @@ import { getToken } from "next-auth/jwt";
 import axios from "axios";
 
 const secret = process.env.SECRET;
+const maxResults = "50";
 let accessToken;
 let playlistIdArray;
 let error;
@@ -16,7 +17,7 @@ const getPlayListSong = async (playlist, pageToken = "") => {
       url: url,
       params: {
         part: "snippet",
-        maxResults: "50",
+        maxResults: maxResults,
         playlistId: playlist.id,
         pageToken: pageToken,
       },
@@ -25,25 +26,35 @@ const getPlayListSong = async (playlist, pageToken = "") => {
       },
     };
 
+    const start = new Date().getTime();
+
     let { data } = await axios(options).catch((err) => {
       return (error = err.response?.data);
     });
 
-    if (data?.nextPageToken) {
+    const end = new Date().getTime();
+    const time = end - start;
+    const timeRequest = {
+      time: time,
+    };
+
+    if (data?.nextPageToken && maxResults >= "50") {
+      const otherVideos = await otherPageVideos(playlist, data.nextPageToken);
       return (playlists = [
         ...playlists,
         {
           playlist,
+          timeRequest: {
+            time: time + otherVideos.time,
+          },
           videos: {
             ...data,
-            items: data.items.concat(
-              await otherPageVideos(playlist, data.nextPageToken)
-            ),
+            items: [...data.items, ...otherVideos.data],
           },
         },
       ]);
     } else {
-      playlists = [...playlists, { playlist, videos: data }];
+      playlists = [...playlists, { playlist, videos: data, timeRequest }];
     }
   }
 };
@@ -66,19 +77,26 @@ const otherPageVideos = async (playlist, pageToken = "") => {
       },
     };
 
+    const start = new Date().getTime();
+
     let { data } = await axios(options).catch((err) => {
       return (error = err.response?.data);
     });
 
-    if(data.items){
-      return data.items;
+    const end = new Date().getTime();
+    const time = end - start;
+
+    if (data.items) {
+      const request = {
+        data: data.items,
+        time: time,
+      };
+      return request;
     }
-    
   }
 };
 
 const requestYoutube = async (req, res) => {
-  //get content from method get
   playlistIdArray = req.body.params.playlistIdArray;
 
   const token = await getToken({ req, secret, encryption: true });

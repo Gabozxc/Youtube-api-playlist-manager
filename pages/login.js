@@ -1,20 +1,11 @@
-import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 
 import logoGoogle from "/public/images/logo-google.svg";
 
-import useCheckSession from "../hooks/useCheckSession";
 import { Layout } from "../components/root";
 
 export default function Login() {
-  const session = useCheckSession();
-  const router = useRouter();
-
-  if (session) {
-    router.push("/");
-  }
-
   return (
     <Layout>
       <div className="flex justify-center flex-col items-center  my-0 mx-auto mt-10 p-5 rounded shadow-md	max-w-[95%] sm:max-w-[45%] md:max-w-[28%]">

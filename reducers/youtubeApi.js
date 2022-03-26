@@ -21,6 +21,11 @@ import {
   EDITING_PLAYLIST_SUCCESS,
   EDITING_PLAYLIST_FAILURE,
   CLEAN_MESSAGE,
+  DOWNLOADING_VIDEOS,
+  DOWNLOADING_VIDEOS_SUCCESS,
+  DOWNLOADING_VIDEOS_FAILURE,
+  LOADING_PAGE,
+  LOADING_PAGE_SUCCESS,
 } from "../types/typesYT";
 
 const initialState = {
@@ -38,21 +43,48 @@ const stateYoutubeApi = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
-        error:false,
+        error: false,
         logIn: true,
       };
     case DOWNLOADING_DATA_SUCCESS:
       return {
         ...state,
         loading: false,
-        error:false,
+        error: false,
         playListObject: action.payload,
+      };
+    case DOWNLOADING_VIDEOS:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+      };
+    case DOWNLOADING_VIDEOS_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        playListObject: action.payload,
+      };
+    case DOWNLOADING_VIDEOS_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        message: action.payload,
+      };
+    case DOWNLOADING_DATA_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        message: action.payload,
       };
     case CREATING_PLAYLIST_SUCCESS:
       return {
         ...state,
         loading: false,
-        error:false,
+        error: false,
         message: "Playlist successfully created",
         playListObject: [action.payload, ...state.playListObject],
       };
@@ -60,7 +92,7 @@ const stateYoutubeApi = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error:false,
+        error: false,
         message: "Playlist successfully deleted",
         playListObject: state.playListObject.filter(
           (playlist) => playlist.playlist.id !== action.payload
@@ -70,14 +102,14 @@ const stateYoutubeApi = (state = initialState, action) => {
       return {
         ...state,
         loading: false,
-        error:false,
+        error: false,
         searchResults: action.payload,
       };
     case DELETE_VIDEO_FROM_PLAYLIST_SUCCESS:
       return {
         ...state,
         loading: false,
-        error:false,
+        error: false,
         playListObject: state.playListObject.map((object) => {
           if (object.playlist.id === action.payload.idPlaylist) {
             return {
@@ -98,27 +130,27 @@ const stateYoutubeApi = (state = initialState, action) => {
         ...state,
         loading: false,
         message: "Videos successfully added",
-        error:false,
-        playListObject: state.playListObject.map((object) => {
-          if (action.payload.playlists.includes(object.playlist.id)) {
-            let videoAdd = action.payload.videos.filter((video) => video.snippet.playlistId === object.playlist.id);
-            return {
-              ...object,
-              videos: {
-                ...object.videos,
-                items: [...object.videos.items,  ...videoAdd]
-              },
-            };
-          }
-          return object;
-        })
+        error: false,
+        // playListObject: state.playListObject.map((object) => {
+        //   if (action.payload.playlists.includes(object.playlist.id)) {
+        //     let videoAdd = action.payload.videos.filter((video) => video.snippet.playlistId === object.playlist.id);
+        //     return {
+        //       ...object,
+        //       videos: {
+        //         ...object.videos,
+        //         items: [...object.videos.items,  ...videoAdd]
+        //       },
+        //     };
+        //   }
+        //   return object;
+        // })
       };
     case EDITING_PLAYLIST_SUCCESS:
       return {
         ...state,
         loading: false,
         message: "Playlist successfully edited",
-        error:false,
+        error: false,
         playListObject: state.playListObject.map((object) => {
           if (object.playlist.id === action.payload.id) {
             return {
@@ -134,6 +166,13 @@ const stateYoutubeApi = (state = initialState, action) => {
           return object;
         }),
       };
+    case LOADING_PAGE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+      };
+    case LOADING_PAGE:
     case EDITING_PLAYLIST:
     case SEARCHING_VIDEO:
     case ADDING_VIDEOS:
@@ -143,7 +182,7 @@ const stateYoutubeApi = (state = initialState, action) => {
       return {
         ...state,
         loading: true,
-        error:false,
+        error: false,
       };
     case EDITING_PLAYLIST_FAILURE:
     case DELETE_VIDEO_FROM_PLAYLIST_FAILURE:

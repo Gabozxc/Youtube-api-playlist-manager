@@ -1,18 +1,31 @@
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import { useDispatch, useSelector } from "react-redux";
 
-import useCheckSession from "../hooks/useCheckSession";
+import { DownloadUserData } from "../actions/ActionsYT";
 import { Layout, PlayListTable } from "../components/root";
 
 export default function MyPlaylist() {
-  const session = useCheckSession();
-  const router = useRouter();
+  const dispatch = useDispatch();
+  const { logIn } = useSelector((state) => state.youtubeApi);
+  const { data: session } = useSession();
 
   useEffect(() => {
-    if (!session) {
-      router.push("/login");
+    if (session && logIn === false) {
+      dispatch(DownloadUserData());
     }
-  }, [router, session]);
+    if (session?.error === "RefreshAccessTokenError") {
+      signIn(); // Force sign in to hopefully resolve error
+    }
+  }, [dispatch, session, logIn]);
+
+  if (!session) {
+    return (
+      <Layout>
+        <h2 className="text-center mt-5">Without Session</h2>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>

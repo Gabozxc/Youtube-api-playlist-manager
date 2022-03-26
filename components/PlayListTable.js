@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import Loading from "./Loading";
 import NewPlayListModal from "./NewPlayListModal";
 import UpdatePlaylistModal from "./UpdatePlaylistModal";
 
 const PlayListTable = () => {
-
+  const dispatch = useDispatch();
   const { playListObject, loading } = useSelector((state) => state.youtubeApi);
 
   const [modal, setModal] = useState(false);
@@ -17,7 +17,11 @@ const PlayListTable = () => {
   const editPlaylist = (object) => {
     setPlaylistSelect(object.playlist);
     setModalUpdate(true);
-  }
+  };
+
+  const loadingPage = () => {
+    dispatch({ type: "LOADING_PAGE" });
+  };
 
   return (
     <section
@@ -41,11 +45,6 @@ const PlayListTable = () => {
                         </div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
-                        <div className="font-semibold text-left">
-                          Videos
-                        </div>
-                      </th>
-                      <th className="p-2 whitespace-nowrap">
                         <div className="font-semibold text-center">Type</div>
                       </th>
                       <th className="p-2 whitespace-nowrap">
@@ -61,15 +60,11 @@ const PlayListTable = () => {
                             <Link href={`/playlist/${object.playlist.id}`}>
                               <a
                                 className="hover:text-gray-900"
+                                onClick={loadingPage}
                               >
                                 {object.playlist.snippet.title}
                               </a>
                             </Link>
-                          </div>
-                        </td>
-                        <td className="p-2 whitespace-nowrap">
-                          <div className="font-semibold text-left">
-                            {object.videos.length ? object.videos.length : object.videos.items.length}
                           </div>
                         </td>
                         <td className="p-2 whitespace-nowrap">
@@ -79,11 +74,15 @@ const PlayListTable = () => {
                         </td>
                         <td className="p-2 whitespace-nowrap">
                           <div className="font-semibold text-center ">
-                             <p className="cursor-pointer" onClick={() => editPlaylist(object)}>✏︎</p>
+                            <p
+                              className="cursor-pointer"
+                              onClick={() => editPlaylist(object)}
+                            >
+                              ✏︎
+                            </p>
                           </div>
                         </td>
                       </tr>
-                       
                     ))}
                   </tbody>
                 </table>
@@ -99,7 +98,13 @@ const PlayListTable = () => {
         </div>
       )}
       <NewPlayListModal modal={modal} setModal={setModal} />
-      {modalUpdate && <UpdatePlaylistModal modal={modalUpdate} setModal={setModalUpdate} playlistSelect={playlistSelect}/>}
+      {modalUpdate && (
+        <UpdatePlaylistModal
+          modal={modalUpdate}
+          setModal={setModalUpdate}
+          playlistSelect={playlistSelect}
+        />
+      )}
     </section>
   );
 };

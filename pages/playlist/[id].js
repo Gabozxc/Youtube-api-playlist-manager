@@ -1,46 +1,65 @@
-import {useState, useEffect} from 'react';
-import {useRouter} from 'next/router';
-import {useSelector} from "react-redux";
+import { useEffect } from "react";
+import { useState } from "react";
+import axios from "axios";
+import { getSession } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
+import { useDispatch } from "react-redux";
 
 import useCheckSession from "../../hooks/useCheckSession";
 
-import {
-  Layout,
-  BoxVideosPlaylist,
-  Loading,
-} from "../../components/root";
+import { Layout, BoxVideosPlaylist, Loading } from "../../components/root";
 
-export default function Playlist() {
+export async function getServerSideProps({ req, query }) {
+  const secret = process.env.SECRET;
+  const session = await getSession({ req });
+  const token = await getToken({ req, secret, encryption: true });
 
+  const id = query.id;
+
+  if (token && session) {
+    const { data } = await axios.post(
+      `${process.env.NEXTAUTH_URL}/api/YoutubeApi/getPlaylistSongs`,
+      {
+        withCredentials: true,
+        id,
+        token,
+      }
+    );
+    return {
+      props: {
+        id,
+        session: session,
+        data,
+      },
+    };
+  }
+
+  return {
+    props: {
+      session: false,
+    },
+  };
+}
+
+export default function Playlist({ data, id }) {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch({ type: "LOADING_PAGE_SUCCESS" });
+  }, [dispatch]);
+
+  const [loading, setLoading] = useState(false);
   const session = useCheckSession();
 
-  const { playListObject, loading } = useSelector((state) => state.youtubeApi);
-  const [videos, setVideos] = useState([]);
-  const router = useRouter();
-  const id = router.query.id;
-
-  useEffect(() => { 
-    playListObject.find((object) => {
-      if (object.playlist.id === id) {
-        setVideos(object.videos.items ? object.videos.items : object.videos);
-      }
-    });
-  }  , [playListObject, id]);
-
-
   if (!session) {
-    return (
-      <Layout>
-        <h2>Without Session</h2>
-      </Layout>
-    );
+    return <h2>Without Session</h2>;
   }
 
   return (
     <Layout>
-      <div className="titulo-search flex items-center justify-start flex-wrap mt-5 ml-2">
+      <div className="titulo-search flex items-center justify-start flex-wrap mt-10 ml-4">
         <h2 className="mt-3 ml-1 sm:mt-0 sm:ml-7 mb-5 font-bold text-xl">
-          You have {videos.length} videos in this playlist
+          You have {data?.length} videos:
         </h2>
       </div>
 
@@ -49,9 +68,10 @@ export default function Playlist() {
           <Loading />
         </div>
       ) : (
-        <BoxVideosPlaylist 
-          videos={videos}
+        <BoxVideosPlaylist
+          videos={data}
           idPlaylist={id}
+          setLoading={setLoading}
         />
       )}
     </Layout>
